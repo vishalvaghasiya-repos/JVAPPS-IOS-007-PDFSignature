@@ -220,7 +220,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = eSignPDF/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "eSign PDF";
+				INFOPLIST_KEY_CFBundleDisplayName = "PDF Signature";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -262,7 +262,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = eSignPDF/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "eSign PDF";
+				INFOPLIST_KEY_CFBundleDisplayName = "PDF Signature";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
