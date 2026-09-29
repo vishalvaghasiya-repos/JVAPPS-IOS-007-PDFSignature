@@ -14,64 +14,49 @@ struct SignatureLibraryView: View {
 
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var router: AppRouter
+    @ObservedObject private var localization = LocalizationManager.shared
 
     @StateObject private var vm = SignatureViewModel()
     @State private var renameText = ""
+    @State private var previewTarget: SignatureModel?
     @State private var bannerIsLoaded = false
     @State private var bannerHeight: CGFloat = 0
 
     var body: some View {
         ZStack {
             Theme.primaryGradient.ignoresSafeArea()
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 14) {
                     if vm.signatures.isEmpty {
                         ContentUnavailableView(
-                            "No signatures",
+                            localization.localized("no_signatures_yet"),
                             systemImage: "signature",
-                            description: Text("Tap the '+' button above to create one.")
+                            description: Text(localization.localized("create_signature_desc"))
                         )
                         .padding(.top, 48)
                     }
+
                     ForEach(vm.signatures) { sig in
-                        HStack(spacing: 14) {
-                            if let img = sig.loadImage() {
-                                Image(uiImage: img)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 44)
-                                    .padding(6)
-                                    .background(RoundedRectangle(cornerRadius: 10).fill(Color(white: 0.93)))
+                        SignatureLibraryRow(
+                            sig: sig,
+                            onPreview: {
+                                previewTarget = sig
+                                HapticFeedback.light()
+                            },
+                            onRename: {
+                                vm.renameTarget = sig
+                                renameText = sig.name
+                            },
+                            onDelete: {
+                                vm.delete(sig)
                             }
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(sig.name)
-                                    .font(.system(.body, design: .rounded).weight(.semibold))
-                                Text(sig.createdAt.formatted(date: .abbreviated, time: .omitted))
-                                    .font(.system(.caption, design: .rounded))
-                                    .foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                            Menu {
-                                Button("Rename") {
-                                    vm.renameTarget = sig
-                                    renameText = sig.name
-                                }
-                                Button("Delete", role: .destructive) {
-                                    vm.delete(sig)
-                                }
-                            } label: {
-                                Image(systemName: "ellipsis.circle")
-                                    .font(.system(size: 22))
-                                    .foregroundStyle(Theme.primaryText)
-                            }
-                        }
-                        .padding(14)
-                        .glassCard(cornerRadius: 18)
+                        )
                     }
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
             }
+            .scrollIndicators(.hidden)
         }
         .safeAreaInset(edge: .bottom) {
             BannerAdView(
@@ -81,43 +66,135 @@ struct SignatureLibraryView: View {
             )
             .frame(height: bannerHeight)
         }
-        .navigationTitle("Signatures")
+        .navigationTitle(localization.localized("signatures"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(colorScheme == .dark ? Color.black.opacity(0.92) : Color(uiColor: .systemBackground), for: .navigationBar)
-        .toolbarColorScheme(colorScheme == .dark ? .dark : .light, for: .navigationBar)
-        .tint(.primary)
+        .toolbar(.hidden, for: .tabBar)
+        .tint(Theme.primary)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     router.push(.newSignature, on: appState.selectedTab)
                 } label: {
                     Image(systemName: "plus")
+                        .font(.system(size: 16, weight: .bold))
                 }
-                .tint(Theme.primaryText)
+                .tint(Theme.primary)
             }
         }
-        .alert("Rename signature", isPresented: Binding(
+        .alert(localization.localized("rename_signature"), isPresented: Binding(
             get: { vm.renameTarget != nil },
             set: { if !$0 { vm.renameTarget = nil } }
         )) {
-            TextField("Name", text: $renameText)
-            Button("Cancel", role: .cancel) { vm.renameTarget = nil }
-            Button("Save") {
+            TextField(localization.localized("signature_name"), text: $renameText)
+            Button(localization.localized("cancel"), role: .cancel) { vm.renameTarget = nil }
+            Button(localization.localized("save")) {
                 vm.newName = renameText
                 vm.rename()
             }
         } message: {
-            Text("Give this signature a memorable name.")
+            Text(localization.localized("rename_signature_desc"))
         }
-        .alert("Error", isPresented: Binding(
+        .alert(localization.localized("error"), isPresented: Binding(
             get: { vm.errorMessage != nil },
             set: { if !$0 { vm.errorMessage = nil } }
         )) {
-            Button("OK", role: .cancel) { vm.errorMessage = nil }
+            Button(localization.localized("ok"), role: .cancel) { vm.errorMessage = nil }
         } message: {
             Text(vm.errorMessage ?? "")
+        }
+        .fullScreenCover(item: $previewTarget) { sig in
+            SignatureDetailPreviewView(signature: sig) {
+                vm.reload()
+            }
         }
         .onAppear { vm.attach(context: modelContext) }
     }
 }
+
+private struct SignatureLibraryRow: View {
+    let sig: SignatureModel
+    let onPreview: () -> Void
+    let onRename: () -> Void
+    let onDelete: () -> Void
+
+    var body: some View {
+        Button(action: onPreview) {
+            HStack(spacing: 14) {
+                SignatureThumbnailBox(model: sig)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(sig.name)
+                        .font(.system(.body, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.primaryText)
+                    Text(sig.createdAt.formatted(date: .abbreviated, time: .omitted))
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundStyle(Theme.secondaryText)
+                }
+
+                Spacer()
+
+                SignatureRowMenu(
+                    onPreview: onPreview,
+                    onRename: onRename,
+                    onDelete: onDelete
+                )
+            }
+            .padding(14)
+            .glassCard(cornerRadius: 18)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct SignatureThumbnailBox: View {
+    let model: SignatureModel
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Theme.lightBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(Theme.border, lineWidth: 0.8)
+                )
+
+            if let img = model.loadImage() {
+                Image(uiImage: img)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(6)
+            }
+        }
+        .frame(width: 64, height: 50)
+    }
+}
+
+private struct SignatureRowMenu: View {
+    let onPreview: () -> Void
+    let onRename: () -> Void
+    let onDelete: () -> Void
+
+    var body: some View {
+        Menu {
+            Button(action: onPreview) {
+                Label(LocalizationManager.shared.localized("preview_signature"), systemImage: "eye")
+            }
+
+            Button(action: onRename) {
+                Label(LocalizationManager.shared.localized("rename"), systemImage: "pencil")
+            }
+
+            Button(role: .destructive, action: onDelete) {
+                Label(LocalizationManager.shared.localized("delete"), systemImage: "trash")
+            }
+        } label: {
+            Image(systemName: "ellipsis")
+                .font(.system(size: 16, weight: .bold))
+                .foregroundStyle(Theme.secondaryText)
+                .frame(width: 32, height: 32)
+                .background(Circle().fill(Theme.lightBackground))
+        }
+    }
+}
+

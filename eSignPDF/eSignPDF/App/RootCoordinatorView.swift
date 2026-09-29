@@ -7,6 +7,7 @@ import SwiftUI
 
 struct RootCoordinatorView: View {
     @EnvironmentObject private var appState: AppState
+    @ObservedObject private var localization = LocalizationManager.shared
     @State private var showLaunch = true
 
     var body: some View {
@@ -32,5 +33,7 @@ struct RootCoordinatorView: View {
         .animation(.easeInOut(duration: 0.35), value: appState.hasCompletedOnboarding)
         .animation(.easeInOut(duration: 0.35), value: appState.hasSeenWelcome)
         .preferredColorScheme(appState.preferredColorScheme)
+        .environment(\.layoutDirection, localization.currentLanguage.layoutDirection)
+        .id(localization.currentLanguage.code)
     }
 }

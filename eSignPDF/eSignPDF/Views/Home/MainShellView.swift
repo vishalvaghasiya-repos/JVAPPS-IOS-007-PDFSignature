@@ -8,28 +8,29 @@ import AdsManagerKit
 
 struct MainShellView: View {
     @EnvironmentObject private var appState: AppState
+    @ObservedObject private var localization = LocalizationManager.shared
 
     var body: some View {
         TabView(selection: $appState.selectedTab) {
             HomeView()
                 .tabItem {
-                    Label("Home", systemImage: "house.fill")
+                    Label(localization.localized("home"), systemImage: "house.fill")
                 }
                 .tag(AppState.MainTab.home)
 
             HistoryView()
                 .tabItem {
-                    Label("History", systemImage: "clock.fill")
+                    Label(localization.localized("history"), systemImage: "clock.fill")
                 }
                 .tag(AppState.MainTab.history)
 
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
+                    Label(localization.localized("settings"), systemImage: "gearshape.fill")
                 }
                 .tag(AppState.MainTab.settings)
         }
-        .tint(Theme.primaryText)
+        .tint(Theme.primary)
         .onChange(of: appState.selectedTab) { _, _ in
             AdsManager.shared.showInterstitialIfAvailable()
         }
@@ -38,12 +39,6 @@ struct MainShellView: View {
             appearance.configureWithDefaultBackground()
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance
-        }
-        .sheet(isPresented: $appState.showPremiumPaywall) {
-            PremiumView()
-        }
-        .onAppear {
-            SubscriptionManager.shared.refreshPremiumState()
         }
     }
 }

@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,15 +16,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="xp7-ef-GK8">
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="xp7-ef-GK8">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash_logo" translatesAutoresizingMaskIntoConstraints="NO" id="WW7-Lz-bqX">
-                                <rect key="frame" x="103.66666666666669" y="329" width="186" height="194"/>
+                                <rect key="frame" x="121.66666666666669" y="351" width="150" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="b2I-97-L96"/>
+                                    <constraint firstAttribute="width" secondItem="WW7-Lz-bqX" secondAttribute="height" multiplier="1:1" id="vf5-Vo-5f1"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="LightBackground"/>
                         <constraints>
                             <constraint firstItem="WW7-Lz-bqX" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="32Y-yV-kGk"/>
                             <constraint firstItem="WW7-Lz-bqX" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="3J5-jf-Xqd"/>
@@ -32,6 +37,11 @@
                             <constraint firstItem="xp7-ef-GK8" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="cMe-Ci-8XQ"/>
                             <constraint firstAttribute="bottom" secondItem="xp7-ef-GK8" secondAttribute="bottom" id="g88-6F-DfA"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="xp7-ef-GK8"/>
+                            </mask>
+                        </variation>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -41,6 +51,9 @@
     </scenes>
     <resources>
         <image name="Splash" width="390" height="847"/>
-        <image name="splash_logo" width="186" height="194"/>
+        <image name="splash_logo" width="1024" height="1024"/>
+        <namedColor name="LightBackground">
+            <color red="0.90980392156862744" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

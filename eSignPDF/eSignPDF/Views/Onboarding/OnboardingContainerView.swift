@@ -24,7 +24,7 @@ struct OnboardingContainerView: View {
                             appState.hasCompletedOnboarding = true
                         }
                     } label: {
-                        Text("Skip")
+                        Text(LocalizationManager.shared.localized("skip"))
                             .font(.system(.body, design: .rounded).weight(.semibold))
                             .foregroundStyle(skipForeground)
                             .padding(.horizontal, 16)
@@ -59,14 +59,14 @@ struct OnboardingContainerView: View {
                 HStack(spacing: 8) {
                     ForEach(0 ..< pages.count, id: \.self) { i in
                         Capsule()
-                            .fill(i == pageIndex ? Theme.accent : Theme.accent.opacity(0.24))
+                            .fill(i == pageIndex ? Theme.primary : Theme.primary.opacity(0.25))
                             .frame(width: i == pageIndex ? 22 : 8, height: 8)
                             .animation(.spring(response: 0.35), value: pageIndex)
                     }
                 }
                 .padding(.bottom, 24)
 
-                PrimaryButton(title: pageIndex == pages.count - 1 ? "Get Started" : "Continue") {
+                PrimaryButton(title: pageIndex == pages.count - 1 ? LocalizationManager.shared.localized("get_started") : LocalizationManager.shared.localized("continue")) {
                     if pageIndex < pages.count - 1 {
                         withAnimation(.spring()) {
                             pageIndex += 1
@@ -84,41 +84,23 @@ struct OnboardingContainerView: View {
     }
 
     private var skipForeground: Color {
-        colorScheme == .light ? Color.primary.opacity(0.9) : Color.white.opacity(0.95)
+        Theme.secondaryText
     }
 
     private var skipBackground: Color {
-        colorScheme == .light
-            ? Color(uiColor: .systemGray6)
-            : Color.white.opacity(0.16)
+        Theme.card
     }
 
     private var skipStroke: Color {
-        colorScheme == .light
-            ? Color.black.opacity(0.1)
-            : Color.white.opacity(0.22)
+        Theme.border
     }
 
     private var skipShadowColor: Color {
-        Color.black.opacity(0.1)
+        Theme.cardShadow
     }
 
     private var screenBackground: some View {
-        LinearGradient(
-            colors: colorScheme == .light
-                ? [
-                    Color(red: 0.94, green: 0.91, blue: 0.98),
-                    Color(red: 0.91, green: 0.93, blue: 0.98),
-                    Color(red: 0.97, green: 0.95, blue: 0.98)
-                  ]
-                : [
-                    Color(red: 0.06, green: 0.05, blue: 0.12),
-                    Color(red: 0.09, green: 0.07, blue: 0.16),
-                    Color(red: 0.03, green: 0.02, blue: 0.06)
-                  ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        Theme.primaryGradient
     }
 }
 
@@ -136,26 +118,21 @@ private struct OnboardingPageView: View {
                 RoundedRectangle(cornerRadius: 32, style: .continuous)
                     .fill(
                         colorScheme == .light
-                            ? Color.white.opacity(0.55)
-                            : Color.white.opacity(0.06)
+                            ? Theme.card.opacity(0.85)
+                            : Theme.card
                     )
                     .frame(height: 340)
                     .overlay {
                         RoundedRectangle(cornerRadius: 32, style: .continuous)
-                            .stroke(
-                                colorScheme == .light
-                                    ? Color.white.opacity(0.7)
-                                    : Color.white.opacity(0.15),
-                                lineWidth: 1.5
-                            )
+                            .stroke(Theme.border, lineWidth: 1.2)
                     }
                     .shadow(
                         color: colorScheme == .light
-                            ? Color.black.opacity(0.05)
-                            : Color.black.opacity(0.25),
-                        radius: 20,
+                            ? Theme.cardShadow
+                            : Color.black.opacity(0.35),
+                        radius: 16,
                         x: 0,
-                        y: 10
+                        y: 8
                     )
 
                 Image(page.imageName)

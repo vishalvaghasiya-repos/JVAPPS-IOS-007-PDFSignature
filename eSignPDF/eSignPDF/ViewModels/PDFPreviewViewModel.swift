@@ -129,6 +129,50 @@ final class PDFPreviewViewModel: ObservableObject {
         placements.removeAll()
     }
 
+    /// Generates an in-memory PDF document with all current committed stamps and live overlay signature.
+    func buildPreviewDocument() -> PDFDocument? {
+        guard let document else { return nil }
+
+        let baseDoc: PDFDocument
+        if let docFromURL = PDFDocument(url: sourceURL) {
+            baseDoc = docFromURL
+        } else if let copy = document.copy() as? PDFDocument {
+            baseDoc = copy
+        } else if let data = document.dataRepresentation(), let docFromData = PDFDocument(data: data) {
+            baseDoc = docFromData
+        } else {
+            baseDoc = document
+        }
+
+        var stamped: [(placement: PDFSignaturePlacement, image: UIImage)] = []
+        if let context = modelContext {
+            for placement in placements {
+                if let model = try? SignatureManager.signature(context: context, id: placement.signatureID),
+                   let img = model.loadImage() {
+                    stamped.append((placement: placement, image: img))
+                }
+            }
+        }
+
+        if let sig = selectedSignature, let img = signatureImage {
+            let activePlacement = PDFSignaturePlacement(
+                signatureID: sig.id,
+                pageIndex: currentPageIndex,
+                normalizedRect: overlayNormalizedRect,
+                rotationDegrees: currentRotation
+            )
+            stamped.append((placement: activePlacement, image: img))
+        }
+
+        guard !stamped.isEmpty else { return baseDoc }
+
+        do {
+            return try PDFManager.applyStampedSignatures(document: baseDoc, stampedPlacements: stamped)
+        } catch {
+            return baseDoc
+        }
+    }
+
     /// Builds (placement, image) pairs: either explicit `placements` or a single stamp from the current overlay.
     private func resolveStampedPlacementsForSave() throws -> [(placement: PDFSignaturePlacement, image: UIImage)] {
         guard let context = modelContext else {
@@ -178,7 +222,7 @@ final class PDFPreviewViewModel: ObservableObject {
 
     func saveSignedPDF(
         displayName: String,
-        recordUsage: () -> Void
+        recordUsage: (() -> Void)? = nil
     ) async {
         guard let modelContext, let document else {
             errorMessage = "Missing document."
@@ -196,7 +240,7 @@ final class PDFPreviewViewModel: ObservableObject {
                 pdfDocument: signed
             )
             lastSavedDocument = saved
-            recordUsage()
+            recordUsage?()
             HapticFeedback.success()
         } catch {
             errorMessage = error.localizedDescription

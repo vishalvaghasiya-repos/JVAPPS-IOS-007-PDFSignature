@@ -21,9 +21,9 @@ struct LaunchView: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Color(red: 0.04, green: 0.05, blue: 0.10),
-                    Color(red: 0.08, green: 0.10, blue: 0.18),
-                    Color(red: 0.10, green: 0.11, blue: 0.20),
+                    Color(red: 0.04, green: 0.08, blue: 0.09),
+                    Color(red: 0.06, green: 0.11, blue: 0.12),
+                    Color(red: 0.08, green: 0.14, blue: 0.15),
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -36,7 +36,7 @@ struct LaunchView: View {
                 Image("splash_logo")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 200)
+                    .frame(width: 150)
                     .opacity(contentOpacity)
                 
                 Spacer()
@@ -75,7 +75,7 @@ struct LaunchView: View {
     private var bottomLoader: some View {
         ProgressView()
             .progressViewStyle(.circular)
-            .tint(.white.opacity(0.9))
+            .tint(Theme.primary)
             .scaleEffect(1.1)
             .padding(.top, 4)
     }

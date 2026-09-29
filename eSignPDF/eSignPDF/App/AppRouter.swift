@@ -14,6 +14,7 @@ enum AppRoute: Hashable {
     case pdfSigning(URL)
     case pdfPreview(SignedDocumentModel)
     case webView(url: URL, title: String)
+    case languageSelection
 }
 
 @MainActor

@@ -8,6 +8,7 @@ import SwiftUI
 struct WelcomeView: View {
     @EnvironmentObject private var appState: AppState
     @Environment(\.colorScheme) private var colorScheme
+    @ObservedObject private var localization = LocalizationManager.shared
     @State private var animate = false
 
     var body: some View {
@@ -21,20 +22,13 @@ struct WelcomeView: View {
                 VStack(spacing: 18) {
                     ZStack {
                         RoundedRectangle(cornerRadius: 32, style: .continuous)
-                            .fill(.ultraThinMaterial)
-                            .frame(width: 120, height: 120)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 32, style: .continuous)
-                                    .stroke(
-                                        colorScheme == .dark ? Color.white.opacity(0.35) : Color.primary.opacity(0.15),
-                                        lineWidth: 1
-                                    )
-                            }
+                            .fill(Theme.buttonGradient)
+                            .frame(width: 110, height: 110)
+                            .shadow(color: Theme.button.opacity(0.35), radius: 16, x: 0, y: 8)
 
-                        Image(systemName: "doc.text.fill")
-                            .font(.system(size: 48, weight: .medium))
-                            .foregroundStyle(colorScheme == .dark ? Color.white : Color.primary)
-                            .symbolRenderingMode(.hierarchical)
+                        Image(systemName: "signature")
+                            .font(.system(size: 48, weight: .bold))
+                            .foregroundStyle(.white)
                     }
                     .scaleEffect(animate ? 1 : 0.88)
                     .opacity(animate ? 1 : 0.75)
@@ -45,7 +39,7 @@ struct WelcomeView: View {
                             .foregroundStyle(Theme.primaryText)
                             .multilineTextAlignment(.center)
 
-                        Text("A calm, premium workspace to sign PDFs, manage signatures, and export with confidence.")
+                        Text("A calm, modern workspace to sign PDFs, manage signatures, and export with confidence.")
                             .font(.system(.body, design: .rounded))
                             .foregroundStyle(Theme.secondaryText)
                             .multilineTextAlignment(.center)
@@ -61,27 +55,14 @@ struct WelcomeView: View {
                 Spacer()
 
                 VStack(spacing: 14) {
-                    PrimaryButton(title: "Get Started") {
+                    PrimaryButton(title: localization.localized("get_started"), systemImage: "arrow.right.circle.fill") {
                         withAnimation(.spring()) {
                             appState.hasSeenWelcome = true
                         }
                     }
-
-                    Button {
-                        Task {
-                            await SubscriptionManager.shared.restore()
-                        }
-                    } label: {
-                        Text("Restore Purchase")
-                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                            .foregroundStyle(Theme.primaryText.opacity(0.88))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                    }
-                    .buttonStyle(.plain)
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 32)
+                .padding(.bottom, 36)
             }
         }
         .onAppear {

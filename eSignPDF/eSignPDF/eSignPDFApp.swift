@@ -30,10 +30,6 @@ struct eSignPDFApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
     @State private var hasLaunched = true
-    
-    init() {
-        PurchasesBootstrap.configureIfPossible()
-    }
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([

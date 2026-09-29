@@ -10,7 +10,6 @@ import UIKit
 
 @MainActor
 final class SettingsViewModel: ObservableObject {
-    @Published var restoreMessage: String?
     @Published var iCloudSyncBusy = false
     @Published var iCloudSyncError: String?
 
@@ -40,16 +39,6 @@ final class SettingsViewModel: ObservableObject {
 
     func contactSupport() {
         UIApplication.shared.open(AppConstants.URLs.support)
-    }
-
-    func restorePurchases() async {
-        await SubscriptionManager.shared.restore()
-        if SubscriptionManager.shared.isPremiumActive {
-            restoreMessage = "Purchases restored."
-            HapticFeedback.success()
-        } else {
-            restoreMessage = "No active subscription found."
-        }
     }
 
     /// `true` when the app can open an iCloud Drive file container (not the same as “signed into iCloud”).

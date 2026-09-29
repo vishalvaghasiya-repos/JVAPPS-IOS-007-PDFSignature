@@ -13,12 +13,17 @@ struct GlassBackground: ViewModifier {
         content
             .background {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(colorScheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.04))
+                    .fill(Theme.card)
                     .overlay {
                         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                            .stroke(colorScheme == .dark ? Color.white.opacity(0.22) : Color.black.opacity(0.08), lineWidth: 1)
+                            .stroke(Theme.border, lineWidth: 1)
                     }
-                    .shadow(color: Theme.cardShadow, radius: 12, x: 0, y: 6)
+                    .shadow(
+                        color: colorScheme == .dark ? Color.black.opacity(0.35) : Theme.cardShadow,
+                        radius: colorScheme == .dark ? 8 : 10,
+                        x: 0,
+                        y: colorScheme == .dark ? 3 : 4
+                    )
             }
     }
 }

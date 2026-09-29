@@ -118,6 +118,7 @@ struct AppWebViewScreen: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) {
             BannerAdView(
                 adType: .ADAPTIVE,

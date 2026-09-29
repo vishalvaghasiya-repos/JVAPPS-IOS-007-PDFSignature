@@ -30,55 +30,37 @@ struct PrimaryButton: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-                .background {
-                    if style == .filled {
-                        Group {
-                            if colorScheme == .light {
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .fill(filledFill)
-                                    .shadow(color: filledShadowColor, radius: 8, x: 0, y: 4)
-                                    .overlay {
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .stroke(filledStroke, lineWidth: 1)
-                                    }
-                            } else {
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .fill(filledFill)
-                                    .shadow(color: filledShadowColor, radius: 4, x: 0, y: 2)
-                                    .overlay {
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .stroke(filledStroke, lineWidth: 1)
-                                    }
-                            }
+            .background {
+                if style == .filled {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(Theme.button)
+                        .shadow(
+                            color: Theme.button.opacity(colorScheme == .light ? 0.32 : 0.45),
+                            radius: colorScheme == .light ? 8 : 6,
+                            x: 0,
+                            y: colorScheme == .light ? 4 : 2
+                        )
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .stroke(
+                                    colorScheme == .light
+                                        ? Color.white.opacity(0.25)
+                                        : Color.white.opacity(0.15),
+                                    lineWidth: 1
+                                )
                         }
-                    } else {
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(outlineStroke, lineWidth: 1.5)
-                    }
+                } else {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(Theme.button, lineWidth: 1.5)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(Theme.lightBackground.opacity(0.45))
+                        )
                 }
-                .foregroundStyle(foregroundTint)
+            }
+            .foregroundStyle(foregroundTint)
         }
         .buttonStyle(ScaleButtonStyle())
-    }
-
-    private var filledFill: Color {
-        Color(red: 0.35, green: 0.34, blue: 0.84)
-    }
-
-    private var filledStroke: Color {
-        colorScheme == .light
-            ? Color.black.opacity(0.08)
-            : Color.white.opacity(0.12)
-    }
-
-    private var filledShadowColor: Color {
-        Color(red: 0.35, green: 0.34, blue: 0.84).opacity(colorScheme == .light ? 0.3 : 0.45)
-    }
-
-    private var outlineStroke: Color {
-        colorScheme == .light
-            ? Color(red: 0.35, green: 0.34, blue: 0.84)
-            : Color.white.opacity(0.7)
     }
 
     private var foregroundTint: Color {
@@ -86,7 +68,7 @@ struct PrimaryButton: View {
         case .filled:
             return .white
         case .outline:
-            return colorScheme == .light ? Color(red: 0.35, green: 0.34, blue: 0.84) : .white
+            return Theme.button
         }
     }
 }

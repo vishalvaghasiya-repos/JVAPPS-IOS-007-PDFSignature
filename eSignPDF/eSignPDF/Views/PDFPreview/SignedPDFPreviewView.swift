@@ -19,7 +19,7 @@ struct SignedPDFPreviewView: View {
 
     var body: some View {
         ZStack {
-            Color(uiColor: .systemGroupedBackground)
+            Theme.background
                 .ignoresSafeArea()
 
             if let pdf {
@@ -27,6 +27,7 @@ struct SignedPDFPreviewView: View {
                     .ignoresSafeArea(edges: .bottom)
             } else {
                 ProgressView("Opening PDF…")
+                    .tint(Theme.primary)
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -40,9 +41,8 @@ struct SignedPDFPreviewView: View {
         .navigationTitle(document.displayName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(colorScheme == .dark ? Color.black.opacity(0.92) : Color(uiColor: .systemBackground), for: .navigationBar)
-        .toolbarColorScheme(colorScheme == .dark ? .dark : .light, for: .navigationBar)
-        .tint(.primary)
+        .toolbar(.hidden, for: .tabBar)
+        .tint(Theme.primary)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
@@ -51,7 +51,7 @@ struct SignedPDFPreviewView: View {
                     Image(systemName: "square.and.arrow.up")
                 }
                 .disabled(pdf == nil)
-                .foregroundStyle(.primary.opacity(pdf == nil ? 0.45 : 1))
+                .foregroundStyle(pdf == nil ? Theme.secondaryText.opacity(0.45) : Theme.primary)
 
                 Menu {
                     Button("Copy path (debug)") {
@@ -59,7 +59,7 @@ struct SignedPDFPreviewView: View {
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Theme.primary)
                 }
             }
         }
