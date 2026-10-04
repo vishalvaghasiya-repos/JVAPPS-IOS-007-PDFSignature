@@ -462,7 +462,7 @@
 			repositoryURL = "https://github.com/vishalvaghasiya-ios/AdsManagerKit.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.9;
+				minimumVersion = 1.4.0;
 			};
 		};
 		D3AFE6702FBDDF7D00249BB3 /* XCRemoteSwiftPackageReference "ASKRatingKit" */ = {

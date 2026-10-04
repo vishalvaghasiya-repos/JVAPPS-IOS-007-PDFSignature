@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vishalvaghasiya-ios/AdsManagerKit.git",
       "state" : {
-        "revision" : "5c9821c5499b4c923f64a55f64844257b1089b1d",
-        "version" : "1.3.9"
+        "revision" : "3ed195e8c4632e0f99be7f4ffdb23dc0f9a4c638",
+        "version" : "1.4.0"
       }
     },
     {
