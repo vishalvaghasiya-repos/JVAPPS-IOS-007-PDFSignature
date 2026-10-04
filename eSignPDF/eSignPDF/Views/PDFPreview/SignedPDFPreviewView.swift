@@ -15,7 +15,7 @@ struct SignedPDFPreviewView: View {
     @State private var pdf: PDFDocument?
     @State private var showShare = false
     @State private var bannerIsLoaded = false
-    @State private var bannerHeight: CGFloat = 0
+    @State private var bannerHeight: CGFloat = 50
 
     var body: some View {
         ZStack {
@@ -32,11 +32,11 @@ struct SignedPDFPreviewView: View {
         }
         .safeAreaInset(edge: .bottom) {
             BannerAdView(
-                adType: .ADAPTIVE,
+                adType: .adaptive,
                 isLoaded: $bannerIsLoaded,
                 height: $bannerHeight
             )
-            .frame(height: bannerHeight)
+            .frame(height: bannerIsLoaded ? bannerHeight : 50)
         }
         .navigationTitle(document.displayName)
         .navigationBarTitleDisplayMode(.inline)

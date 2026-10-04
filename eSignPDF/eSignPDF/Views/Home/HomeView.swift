@@ -7,7 +7,7 @@ import SwiftData
 import SwiftUI
 import ASKRatingKit
 import AdsManagerKit
-
+import GoogleMobileAds
 private struct PDFSignSession: Identifiable {
     let id = UUID()
     let url: URL
@@ -24,7 +24,14 @@ struct HomeView: View {
     @State private var pickedURL: URL?
     @State private var selectedSignatureForPreview: SignatureModel?
     @State private var nativeIsLoaded = false
-    @State private var nativeHeight: CGFloat = AdType.MEDIUM.height
+    @State private var nativeHeight: CGFloat = 170
+    private let nativeAdView: NativeAdView = {
+        let bundle = Bundle(for: NativeAdView.self)
+        guard let adView = bundle.loadNibNamed("NativeAdsMedium", owner: nil, options: nil)?.first as? NativeAdView else {
+            fatalError("Could not load NativeAdsMedium.xib")
+        }
+        return adView
+    }()
 
     var body: some View {
         NavigationStack(path: $router.homePath) {
@@ -37,12 +44,12 @@ struct HomeView: View {
                         signaturesSection
 
                         NativeAdContainerView(
-                            adType: .MEDIUM,
+                            adView: nativeAdView,
+                            height: nativeHeight,
                             isLoaded: $nativeIsLoaded,
-                            height: $nativeHeight
+                            resolvedHeight: $nativeHeight
                         )
                         .frame(height: nativeHeight)
-                        .opacity(nativeIsLoaded ? 1 : 0)
                         .cornerRadius(12)
 
                         recentSection

@@ -46,18 +46,18 @@ struct eSignPDFApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootCoordinatorView()
+            RootView()
                 .environmentObject(appState)
                 .environmentObject(router)
-                .onChange(of: scenePhase) { _, newPhase in
-                    if newPhase == .active {
+                .onChange(of: scenePhase) {
+                    if scenePhase == .active {
                         if !hasLaunched {
                             // Show Open Ad only when returning from background
                             hasLaunched = true
-                            AdsManager.shared.presentAppOpenAdIfAvailable()
+                            AdsManager.shared.tryToPresentSplashAd()
                         }
                     }
-                    if newPhase == .background {
+                    if scenePhase == .background {
                         hasLaunched = false
                     }
                 }

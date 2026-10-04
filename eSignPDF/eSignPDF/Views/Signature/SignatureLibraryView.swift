@@ -20,7 +20,7 @@ struct SignatureLibraryView: View {
     @State private var renameText = ""
     @State private var previewTarget: SignatureModel?
     @State private var bannerIsLoaded = false
-    @State private var bannerHeight: CGFloat = 0
+    @State private var bannerHeight: CGFloat = 50
 
     var body: some View {
         ZStack {
@@ -60,11 +60,11 @@ struct SignatureLibraryView: View {
         }
         .safeAreaInset(edge: .bottom) {
             BannerAdView(
-                adType: .ADAPTIVE,
+                adType: .adaptive,
                 isLoaded: $bannerIsLoaded,
                 height: $bannerHeight
             )
-            .frame(height: bannerHeight)
+            .frame(height: bannerIsLoaded ? bannerHeight : 50)
         }
         .navigationTitle(localization.localized("signatures"))
         .navigationBarTitleDisplayMode(.inline)

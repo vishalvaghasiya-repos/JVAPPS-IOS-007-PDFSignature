@@ -1,12 +1,12 @@
 //
-//  MainShellView.swift
+//  MainTabView.swift
 //  eSignPDF
 //
 
 import SwiftUI
 import AdsManagerKit
 
-struct MainShellView: View {
+struct MainTabView: View {
     @EnvironmentObject private var appState: AppState
     @ObservedObject private var localization = LocalizationManager.shared
 

@@ -6,7 +6,7 @@
 import SwiftData
 import SwiftUI
 import AdsManagerKit
-
+import GoogleMobileAds
 struct SettingsView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var router: AppRouter
@@ -17,8 +17,18 @@ struct SettingsView: View {
 
     @State private var iCloudSyncToggle = false
     @State private var bannerIsLoaded = false
-    @State private var bannerHeight: CGFloat = 0
+    @State private var bannerHeight: CGFloat = 50
 
+    @State private var nativeIsLoaded = false
+    @State private var nativeHeight: CGFloat = 170
+    private let nativeAdView: NativeAdView = {
+        let bundle = Bundle(for: NativeAdView.self)
+        guard let adView = bundle.loadNibNamed("NativeAdsMedium", owner: nil, options: nil)?.first as? NativeAdView else {
+            fatalError("Could not load NativeAdsMedium.xib")
+        }
+        return adView
+    }()
+    
     var body: some View {
         NavigationStack(path: $router.settingsPath) {
             ZStack {
@@ -88,6 +98,15 @@ struct SettingsView: View {
                             }
                             .padding(.vertical, 10)
                         }
+                        
+                        NativeAdContainerView(
+                            adView: nativeAdView,
+                            height: nativeHeight,
+                            isLoaded: $nativeIsLoaded,
+                            resolvedHeight: $nativeHeight
+                        )
+                        .frame(height: nativeHeight)
+                        .cornerRadius(12)
 
                         // iCloud Library
                         settingsGroup(title: localization.localized("icloud_library")) {
@@ -267,11 +286,11 @@ struct SettingsView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 BannerAdView(
-                    adType: .ADAPTIVE,
+                    adType: .regular,
                     isLoaded: $bannerIsLoaded,
                     height: $bannerHeight
                 )
-                .frame(height: bannerHeight)
+                .frame(height: bannerIsLoaded ? bannerHeight : 50)
             }
             .navigationTitle(localization.localized("settings"))
             .navigationBarTitleDisplayMode(.inline)

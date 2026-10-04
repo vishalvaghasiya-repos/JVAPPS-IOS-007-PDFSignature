@@ -5,17 +5,17 @@
 
 import SwiftUI
 import AdsManagerKit
-import FirebaseRemoteConfigInternal
+import FirebaseRemoteConfig
 import Network
 
 struct LaunchView: View {
-    let onFinished: () -> Void
     
-    @State private var logoScale: CGFloat = 0.6
+    @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var router: AppRouter
+    
+    @State private var adDelegate = SplashAdDelegate()
+    @State private var showMainScreen = false
     @State private var contentOpacity: Double = 0
-    @State private var ringRotation: Double = 0
-    @State private var loadingPhase: CGFloat = 0
-    @State private var shimmerX: CGFloat = 0
     
     var body: some View {
         ZStack {
@@ -23,7 +23,7 @@ struct LaunchView: View {
                 colors: [
                     Color(red: 0.04, green: 0.08, blue: 0.09),
                     Color(red: 0.06, green: 0.11, blue: 0.12),
-                    Color(red: 0.08, green: 0.14, blue: 0.15),
+                    Color(red: 0.08, green: 0.14, blue: 0.15)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -48,29 +48,12 @@ struct LaunchView: View {
             .padding(.horizontal, 24)
         }
         .onAppear {
-            withAnimation(.spring(response: 0.9, dampingFraction: 0.72)) {
-                logoScale = 1.0
-            }
-            withAnimation(.easeOut(duration: 0.9).delay(0.15)) {
-                contentOpacity = 1
-            }
-            withAnimation(.linear(duration: 12).repeatForever(autoreverses: false)) {
-                ringRotation = 360
-            }
-            withAnimation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true)) {
-                loadingPhase = 1
-            }
-            fetchFromRemoteConfig {
-                DispatchQueue.main.async {
-                    AdsManager.configure {
-                        DispatchQueue.main.async {
-                            onFinished()
-                        }
-                    }
-                }
-            }
+            startAnimations()
+            configureSetup()
         }
     }
+    
+    // MARK: - Loader
     
     private var bottomLoader: some View {
         ProgressView()
@@ -79,96 +62,200 @@ struct LaunchView: View {
             .scaleEffect(1.1)
             .padding(.top, 4)
     }
-}
-
-#Preview {
-    LaunchView {
-        print("Launch Finished")
-    }
-}
-
-private func fetchFromRemoteConfig(_ completion: @Sendable @escaping () -> Void) {
-    if !checkInternet() {
-        completion()
-        return
+    
+    // MARK: - Environment
+    
+    private var remoteConfigKey: String {
+        #if DEBUG || TESTING
+        return "appConfigurationTest"
+        #else
+        return "appConfiguration"
+        #endif
     }
     
-    let remoteConfig = RemoteConfig.remoteConfig()
-    let settings = RemoteConfigSettings()
-    #if DEBUG
-    settings.minimumFetchInterval = 0
-    #else
-    settings.minimumFetchInterval = 3600
-    #endif
-    remoteConfig.configSettings = settings
+    private var remoteConfigFetchInterval: TimeInterval {
+        #if DEBUG
+        return 0
+        #elseif TESTING
+        return 300
+        #else
+        return 3600
+        #endif
+    }
     
-    let expirationDuration = 0
-    remoteConfig.fetch(withExpirationDuration: TimeInterval(expirationDuration)) { (status, error) -> Void in
-        guard status == .success else {
-            completion()
+    // MARK: - Setup
+    
+    private func configureSetup() {
+        
+        adDelegate.onComplete = {
+            Task { @MainActor in
+                startMainScreen()
+            }
+        }
+        
+        guard NetworkMonitor.isConnected else {
+            initializeWithoutRemoteConfig()
             return
         }
-        remoteConfig.activate { (success, error) in
-            let config = RemoteConfig.remoteConfig()
+        
+        fetchRemoteConfiguration()
+    }
+    
+    // MARK: - Remote Configuration
+    
+    private func fetchRemoteConfiguration() {
+        
+        let remoteConfig = RemoteConfig.remoteConfig()
+        
+        let settings = RemoteConfigSettings()
+        settings.minimumFetchInterval = remoteConfigFetchInterval
+        remoteConfig.configSettings = settings
+        
+        remoteConfig.fetch(withExpirationDuration: remoteConfigFetchInterval) { status, _ in
             
-            var isProduction = true
-            #if DEBUG
-            isProduction = false
-            #endif
+            guard status == .success else {
+                DispatchQueue.main.async {
+                    self.initializeWithoutRemoteConfig()
+                }
+                return
+            }
             
-            let openAdEnabled = config.configValue(forKey: "openAdEnabled").boolValue
-            let bannerAdEnabled = config.configValue(forKey: "bannerAdEnabled").boolValue
-            let interstitialAdEnabled = config.configValue(forKey: "interstitialAdEnabled").boolValue
-            let nativeAdEnabled = config.configValue(forKey: "nativeAdEnabled").boolValue
-            let openAdUnitId = config.configValue(forKey: "openAdUnitId").stringValue
-            let bannerAdUnitId = config.configValue(forKey: "bannerAdUnitId").stringValue
-            let interstitialAdUnitId = config.configValue(forKey: "interstitialAdUnitId").stringValue
-            let nativeAdUnitId = config.configValue(forKey: "nativeAdUnitId").stringValue
-            let interstitialAdShowCount = Int(truncating: config.configValue(forKey: "interstitialAdShowCount").numberValue)
-            let maxInterstitialAdsPerSession = Int(truncating: config.configValue(forKey: "maxInterstitialAdsPerSession").numberValue)
-            let bannerAdErrorCount = Int(truncating: config.configValue(forKey: "bannerAdErrorCount").numberValue)
-            let interstitialAdErrorCount = Int(truncating: config.configValue(forKey: "interstitialAdErrorCount").numberValue)
-            let nativeAdErrorCount = Int(truncating: config.configValue(forKey: "nativeAdErrorCount").numberValue)
-            
-            DispatchQueue.main.async {
-                AdsManager.configureAds(
-                    isProduction: isProduction,
-                    openAdEnabled: openAdEnabled,
-                    bannerAdEnabled: bannerAdEnabled,
-                    interstitialAdEnabled: interstitialAdEnabled,
-                    nativeAdEnabled: nativeAdEnabled,
-                    openAdUnitId: openAdUnitId,
-                    bannerAdUnitId: bannerAdUnitId,
-                    interstitialAdUnitId: interstitialAdUnitId,
-                    nativeAdUnitId: nativeAdUnitId,
-                    interstitialAdShowCount: interstitialAdShowCount,
-                    maxInterstitialAdsPerSession: maxInterstitialAdsPerSession,
-                    bannerAdErrorCount: bannerAdErrorCount,
-                    interstitialAdErrorCount: interstitialAdErrorCount,
-                    nativeAdErrorCount: nativeAdErrorCount
-                )
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                    completion()
-                })
+            remoteConfig.activate { _, _ in
+                DispatchQueue.main.async {
+                    self.applyRemoteConfiguration(remoteConfig)
+                }
             }
         }
     }
-}
-
-private func checkInternet() -> Bool {
-    let monitor = NWPathMonitor()
-    let queue = DispatchQueue(label: "InternetConnectionMonitor")
-    var isConnected = false
-    let semaphore = DispatchSemaphore(value: 0)
     
-    monitor.pathUpdateHandler = { path in
-        isConnected = (path.status == .satisfied)
-        semaphore.signal()
+    // MARK: - Configuration
+    
+    private func applyRemoteConfiguration(_ remoteConfig: RemoteConfig) {
+        
+        let jsonString = remoteConfig.configValue(forKey: remoteConfigKey).stringValue
+        
+        guard let data = jsonString.data(using: .utf8), !data.isEmpty else {
+            initializeWithoutRemoteConfig()
+            return
+        }
+        
+        do {
+            let configuration = try JSONDecoder().decode(
+                AppConfiguration.self,
+                from: data
+            )
+            
+            initializeAds(configuration: configuration)
+        } catch {
+            initializeWithoutRemoteConfig()
+        }
     }
     
-    monitor.start(queue: queue)
-    _ = semaphore.wait(timeout: .now() + 1)
-    monitor.cancel()
-    return isConnected
+    // MARK: - Ads Initialization
+    
+    private func initializeAds(configuration: AppConfiguration) {
+        
+        AdsManager.initialize(with: configuration) {
+            let delay = max(0, AdsConfig.splashDelaySeconds)
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                presentSplashAd()
+            }
+        }
+    }
+    
+    private func initializeWithoutRemoteConfig() {
+        
+        AdsManager.initialize()
+        
+        DispatchQueue.main.async {
+            startMainScreen()
+        }
+    }
+    
+    // MARK: - Splash
+    
+    private func presentSplashAd() {
+        
+        DispatchQueue.main.async {
+            
+            AdsManager.shared.tryToPresentSplashAd(
+                delegate: adDelegate
+            )
+        }
+    }
+    
+    // MARK: - Main Screen / Navigation
+    
+    @MainActor
+    private func startMainScreen() {
+        
+        guard !showMainScreen else {
+            return
+        }
+        
+        showMainScreen = true
+        
+        // Handle next screen transition using switch
+        switch appState.nextScreenAfterLaunch {
+        case .onboarding:
+            withAnimation(.easeInOut(duration: 0.45)) {
+                appState.currentScreen = .onboarding
+            }
+        case .welcome:
+            withAnimation(.easeInOut(duration: 0.45)) {
+                appState.currentScreen = .welcome
+            }
+        case .mainTabBar:
+            router.popToRoot(on: .home)
+            withAnimation(.easeInOut(duration: 0.45)) {
+                appState.currentScreen = .mainTabBar
+            }
+        }
+        
+        appState.launchFinished = true
+    }
+    
+    // MARK: - Animations
+    
+    private func startAnimations() {
+        withAnimation(
+            .easeOut(duration: 0.9)
+            .delay(0.15)
+        ) {
+            contentOpacity = 1
+        }
+    }
+}
+
+// MARK: - Network Monitor
+
+private enum NetworkMonitor {
+    
+    static var isConnected: Bool {
+        
+        let monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "InternetConnectionMonitor")
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        var connected = false
+        
+        monitor.pathUpdateHandler = { path in
+            connected = path.status == .satisfied
+            semaphore.signal()
+        }
+        
+        monitor.start(queue: queue)
+        
+        _ = semaphore.wait(timeout: .now() + 1)
+        
+        monitor.cancel()
+        
+        return connected
+    }
+}
+
+#Preview {
+    LaunchView()
+        .environmentObject(AppState())
+        .environmentObject(AppRouter())
 }

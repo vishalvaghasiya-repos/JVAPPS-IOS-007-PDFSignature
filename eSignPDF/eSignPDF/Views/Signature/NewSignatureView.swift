@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 import UIKit
 import AdsManagerKit
-
+import GoogleMobileAds
 struct NewSignatureView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.modelContext) private var modelContext
@@ -46,9 +46,16 @@ struct NewSignatureView: View {
 
     // Common
     @State private var signatureName = "My signature"
-    @State private var bannerIsLoaded = false
-    @State private var bannerHeight: CGFloat = 0
-
+    
+    @State private var nativeIsLoaded = false
+    @State private var nativeHeight: CGFloat = 170
+    private let nativeAdView: NativeAdView = {
+        let bundle = Bundle(for: NativeAdView.self)
+        guard let adView = bundle.loadNibNamed("NativeAdsMedium", owner: nil, options: nil)?.first as? NativeAdView else {
+            fatalError("Could not load NativeAdsMedium.xib")
+        }
+        return adView
+    }()
     // Draw Tab State
     @State private var drawing = PKDrawing()
     @State private var drawColor: Color = .black
@@ -124,14 +131,6 @@ struct NewSignatureView: View {
                 .padding(.bottom, 36)
             }
             .scrollIndicators(.hidden)
-        }
-        .safeAreaInset(edge: .bottom) {
-            BannerAdView(
-                adType: .ADAPTIVE,
-                isLoaded: $bannerIsLoaded,
-                height: $bannerHeight
-            )
-            .frame(height: bannerHeight)
         }
         .navigationTitle(localization.localized("new_signature"))
         .navigationBarTitleDisplayMode(.inline)
@@ -277,6 +276,15 @@ struct NewSignatureView: View {
                     .stroke(Theme.border, lineWidth: 1.2)
             }
 
+            NativeAdContainerView(
+                adView: nativeAdView,
+                height: nativeHeight,
+                isLoaded: $nativeIsLoaded,
+                resolvedHeight: $nativeHeight
+            )
+            .frame(height: nativeHeight)
+            .cornerRadius(12)
+            
             // Draw Ink Color Picker
             colorPaletteRow(
                 title: localization.localized("signature_color"),

@@ -17,7 +17,7 @@ struct HistoryView: View {
 
     @State private var pendingDeleteDoc: SignedDocumentModel?
     @State private var bannerIsLoaded = false
-    @State private var bannerHeight: CGFloat = 0
+    @State private var bannerHeight: CGFloat = 50
 
     var body: some View {
         NavigationStack(path: $router.historyPath) {
@@ -46,11 +46,11 @@ struct HistoryView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 BannerAdView(
-                    adType: .ADAPTIVE,
+                    adType: .collapsed(position: .bottom),
                     isLoaded: $bannerIsLoaded,
                     height: $bannerHeight
                 )
-                .frame(height: bannerHeight)
+                .frame(height: bannerIsLoaded ? bannerHeight : 50)
             }
             .navigationTitle(localization.localized("history"))
             .navigationBarTitleDisplayMode(.inline)

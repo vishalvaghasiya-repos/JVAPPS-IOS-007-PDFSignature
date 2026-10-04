@@ -80,7 +80,7 @@ struct AppWebViewScreen: View {
     @State private var error: Error? = nil
     
     @State private var bannerIsLoaded = false
-    @State private var bannerHeight: CGFloat = 0
+    @State private var bannerHeight: CGFloat = 50
 
     var body: some View {
         ZStack {
@@ -121,11 +121,11 @@ struct AppWebViewScreen: View {
         .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom) {
             BannerAdView(
-                adType: .ADAPTIVE,
+                adType: .collapsed(position: .bottom),
                 isLoaded: $bannerIsLoaded,
                 height: $bannerHeight
             )
-            .frame(height: bannerHeight)
+            .frame(height: bannerIsLoaded ? bannerHeight : 50)
         }
     }
 }
