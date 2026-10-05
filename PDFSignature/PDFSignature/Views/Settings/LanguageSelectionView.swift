@@ -125,7 +125,15 @@ struct LanguageSelectionView: View {
         .navigationTitle(localization.localized("select_language"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Theme.background, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .tint(Theme.primary)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(localization.localized("select_language"))
+                    .font(.system(.headline, design: .rounded).weight(.bold))
+                    .foregroundStyle(Theme.titleText)
+            }
+        }
     }
 }

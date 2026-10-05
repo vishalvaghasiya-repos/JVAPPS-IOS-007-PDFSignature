@@ -27,6 +27,8 @@
 "see_all" = "Vedi tutti";
 "add_new_signature" = "Aggiungi nuova firma";
 "recent_signed" = "Firmati di recente";
+"recent" = "Recenti";
+"see_more" = "Vedi altro";
 "no_signed_docs" = "Nessun documento firmato";
 "sign_first_doc" = "Firma il tuo primo documento.";
 "quick_sign_banner_title" = "Firma documento";
@@ -51,14 +53,14 @@
 "no_signatures_yet" = "Nessuna firma";
 "create_signature_desc" = "Tocca '+' in alto per crearne una.";
 "choose_signature" = "Scegli firma";
-"choose_signature_picker" = "Scegli sticker firma";
+"choose_signature_picker" = "Firma";
 "rename_signature" = "Rinomina firma";
 "rename_signature_desc" = "Assegna un nome a questa firma.";
 "sign_pdf" = "Firma PDF";
 "page_x_of_y" = "Pagina %d / %d";
 "undo_last" = "Annulla ultimo";
 "apply_to_page" = "Applica alla pagina";
-"signature_size" = "Dimensione firma";
+"signature_size" = "Dimensione";
 "document_title" = "Titolo documento firmato";
 "save_signed_pdf" = "Salva PDF firmato";
 "saving" = "Salvataggio…";

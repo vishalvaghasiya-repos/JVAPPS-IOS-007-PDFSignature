@@ -8,10 +8,6 @@ import SwiftUI
 import ASKRatingKit
 import AdsManagerKit
 import GoogleMobileAds
-private struct PDFSignSession: Identifiable {
-    let id = UUID()
-    let url: URL
-}
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
@@ -22,7 +18,7 @@ struct HomeView: View {
 
     @State private var showImporter = false
     @State private var pickedURL: URL?
-    @State private var selectedSignatureForPreview: SignatureModel?
+    @State private var pendingDeleteDoc: SignedDocumentModel?
     @State private var nativeIsLoaded = false
     @State private var nativeHeight: CGFloat = 170
     private let nativeAdView: NativeAdView = {
@@ -35,14 +31,12 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack(path: $router.homePath) {
-            ZStack(alignment: .bottomTrailing) {
-                ScrollView(showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 22) {
-                        quickSignHeroCard
-                            .padding(.top, 8)
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 20) {
+                    quickSignHeroCard
+                        .padding(.top, 6)
 
-                        signaturesSection
-
+                    if nativeIsLoaded {
                         NativeAdContainerView(
                             adView: nativeAdView,
                             height: nativeHeight,
@@ -51,35 +45,49 @@ struct HomeView: View {
                         )
                         .frame(height: nativeHeight)
                         .cornerRadius(12)
-
-                        recentSection
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 96)
-                }
-                .scrollIndicators(.hidden)
 
-                fab
+                    recentSection
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
             }
+            .scrollIndicators(.hidden)
             .background(Theme.primaryGradient.ignoresSafeArea())
+            .background {
+                if !nativeIsLoaded {
+                    NativeAdContainerView(
+                        adView: nativeAdView,
+                        height: nativeHeight,
+                        isLoaded: $nativeIsLoaded,
+                        resolvedHeight: $nativeHeight
+                    )
+                    .frame(height: 0)
+                    .opacity(0)
+                    .allowsHitTesting(false)
+                }
+            }
             .navigationTitle(AppConstants.appDisplayName)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(AppConstants.appDisplayName)
+                        .font(.system(.headline, design: .rounded).weight(.bold))
+                        .foregroundStyle(Theme.titleText)
+                }
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        router.push(.newSignature, on: .home)
+                        router.push(.signatureLibrary, on: .home)
                     } label: {
                         HStack(spacing: 5) {
-                            Image(systemName: "plus")
+                            Image(systemName: "signature")
                                 .font(.system(size: 13, weight: .bold))
-                            Text(localization.localized("new_signature"))
+                            Text(localization.localized("signatures"))
                                 .font(.system(.subheadline, design: .rounded).weight(.semibold))
                         }
-                        .foregroundStyle(Theme.button)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 6)
-                        .background(Color.clear)
+                        .foregroundStyle(Theme.primary)
                     }
                 }
             }
@@ -130,15 +138,23 @@ struct HomeView: View {
         .sheet(isPresented: $showImporter) {
             DocumentPicker(pickedURL: $pickedURL)
         }
-        .fullScreenCover(item: $selectedSignatureForPreview) { sig in
-            SignatureDetailPreviewView(signature: sig) {
-                vm.refresh()
+        .alert(localization.localized("delete_pdf_title"), isPresented: Binding(
+            get: { pendingDeleteDoc != nil },
+            set: { if !$0 { pendingDeleteDoc = nil } }
+        )) {
+            Button(localization.localized("cancel"), role: .cancel) { pendingDeleteDoc = nil }
+            Button(localization.localized("delete"), role: .destructive) {
+                if let doc = pendingDeleteDoc {
+                    vm.delete(doc)
+                }
+                pendingDeleteDoc = nil
             }
+        } message: {
+            Text(localization.localized("delete_pdf_message"))
         }
     }
 
-
-    // MARK: - Quick Sign Hero Card
+    // MARK: - Quick Sign Hero Card (Plain & Sleek Design)
     private var quickSignHeroCard: some View {
         Button {
             showImporter = true
@@ -148,15 +164,15 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 6) {
                         Image(systemName: "sparkles")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundStyle(.white)
+                            .font(.system(size: 11, weight: .bold))
                         Text(localization.localized("quick_sign_banner_title"))
-                            .font(.system(.caption, design: .rounded).weight(.bold))
-                            .foregroundStyle(.white.opacity(0.9))
+                            .font(.system(.caption2, design: .rounded).weight(.bold))
+                            .tracking(0.5)
                     }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(Capsule().fill(Color.white.opacity(0.2)))
+                    .foregroundStyle(.white.opacity(0.95))
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 4)
+                    .background(Capsule().fill(Color.white.opacity(0.18)))
 
                     Text(localization.localized("quick_sign_banner_subtitle"))
                         .font(.system(.title3, design: .rounded).weight(.bold))
@@ -164,10 +180,10 @@ struct HomeView: View {
                         .lineLimit(2)
 
                     HStack(spacing: 6) {
+                        Image(systemName: "doc.badge.plus")
+                            .font(.system(size: 13, weight: .bold))
                         Text(localization.localized("import_pdf"))
                             .font(.system(.subheadline, design: .rounded).weight(.bold))
-                        Image(systemName: "arrow.right.circle.fill")
-                            .font(.system(size: 16))
                     }
                     .foregroundStyle(Theme.primary)
                     .padding(.horizontal, 14)
@@ -180,98 +196,69 @@ struct HomeView: View {
 
                 ZStack {
                     Circle()
-                        .fill(Color.white.opacity(0.15))
-                        .frame(width: 80, height: 80)
+                        .fill(Color.white.opacity(0.14))
+                        .frame(width: 74, height: 74)
 
-                    Image(systemName: "doc.badge.plus")
-                        .font(.system(size: 40, weight: .medium))
+                    Image(systemName: "signature")
+                        .font(.system(size: 34, weight: .medium))
                         .foregroundStyle(.white)
                 }
             }
             .padding(20)
             .background {
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .fill(Theme.buttonGradient)
-                    .shadow(color: Theme.button.opacity(0.35), radius: 12, x: 0, y: 6)
+                    .shadow(color: Theme.button.opacity(0.28), radius: 10, x: 0, y: 5)
             }
         }
         .buttonStyle(.plain)
     }
 
-
-    // MARK: - Signatures Section
-    private var signaturesSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                Text(localization.localized("signatures"))
+    // MARK: - Recent Section (Clean Cards)
+    private var recentSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 6) {
+                Text(localization.localized("recent"))
                     .font(.system(.headline, design: .rounded).weight(.bold))
                     .foregroundStyle(Theme.primaryText)
+
+                if !vm.documents.isEmpty {
+                    Text("(\(vm.documents.count))")
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Theme.secondaryText)
+                }
+
                 Spacer()
-                Button(localization.localized("see_all")) {
-                    router.push(.signatureLibrary, on: .home)
-                }
-                .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                .foregroundStyle(Theme.primary)
-            }
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    // Quick Add Card
+                if vm.documents.count > 5 {
                     Button {
-                        router.push(.newSignature, on: .home)
+                        appState.selectedTab = .history
                     } label: {
-                        VStack(spacing: 8) {
-                            ZStack {
-                                Circle()
-                                    .fill(Theme.primary.opacity(0.12))
-                                    .frame(width: 44, height: 44)
-                                Image(systemName: "plus")
-                                    .font(.system(size: 20, weight: .bold))
-                                    .foregroundStyle(Theme.primary)
-                            }
-                            Text(localization.localized("new_signature"))
-                                .font(.system(.caption, design: .rounded).weight(.semibold))
-                                .foregroundStyle(Theme.primaryText)
+                        HStack(spacing: 4) {
+                            Text(localization.localized("see_more"))
+                                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 11, weight: .semibold))
                         }
-                        .frame(width: 110, height: 110)
-                        .glassCard(cornerRadius: 18)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .strokeBorder(
-                                    Theme.primary.opacity(0.35),
-                                    style: StrokeStyle(lineWidth: 1.2, dash: [4])
-                                )
-                        }
-                    }
-                    .buttonStyle(.plain)
-
-                    // Existing Signatures
-                    ForEach(vm.signatures) { sig in
-                        SignatureChip(model: sig) {
-                            selectedSignatureForPreview = sig
-                            HapticFeedback.light()
-                        }
+                        .foregroundStyle(Theme.primary)
                     }
                 }
-                .padding(.vertical, 4)
             }
-            .scrollIndicators(.hidden)
-        }
-    }
-
-    // MARK: - Recent Section
-    private var recentSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text(localization.localized("recent_signed"))
-                .font(.system(.headline, design: .rounded).weight(.bold))
-                .foregroundStyle(Theme.primaryText)
 
             if vm.recentDocuments.isEmpty {
                 emptyRecent
             } else {
-                ForEach(vm.recentDocuments) { doc in
-                    DocumentRowCard(doc: doc) {
-                        router.push(.pdfPreview(doc), on: .home)
+                VStack(spacing: 10) {
+                    ForEach(vm.recentDocuments) { doc in
+                        DocumentRowCard(
+                            doc: doc,
+                            onOpen: {
+                                router.push(.pdfPreview(doc), on: .home)
+                            },
+                            onDelete: {
+                                pendingDeleteDoc = doc
+                            }
+                        )
                     }
                 }
             }
@@ -279,17 +266,17 @@ struct HomeView: View {
     }
 
     private var emptyRecent: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 14) {
             ZStack {
                 Circle()
                     .fill(Theme.lightBackground)
-                    .frame(width: 42, height: 42)
+                    .frame(width: 44, height: 44)
                 Image(systemName: "doc.text.magnifyingglass")
-                    .font(.system(size: 18))
+                    .font(.system(size: 20))
                     .foregroundStyle(Theme.secondaryText)
             }
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(localization.localized("no_signed_docs"))
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(Theme.primaryText)
@@ -301,104 +288,25 @@ struct HomeView: View {
 
             Spacer()
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 4)
-    }
-
-    // MARK: - FAB
-    private var fab: some View {
-        Button {
-            showImporter = true
-            HapticFeedback.light()
-        } label: {
-            Image(systemName: "plus")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(.white)
-                .frame(width: 58, height: 58)
-                .background {
-                    Circle()
-                        .fill(Theme.buttonGradient)
-                        .shadow(color: Theme.button.opacity(0.4), radius: 12, x: 0, y: 6)
-                }
-        }
-        .padding(.trailing, 22)
-        .padding(.bottom, 24)
+        .padding(16)
+        .glassCard(cornerRadius: 16)
     }
 }
 
-private struct SignatureChip: View {
-    let model: SignatureModel
-    let onTap: () -> Void
-
-    var body: some View {
-        Button(action: onTap) {
-            VStack(spacing: 6) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(Theme.lightBackground.opacity(0.8))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .stroke(Theme.border, lineWidth: 0.8)
-                        }
-
-                    if let ui = model.loadImage() {
-                        Image(uiImage: ui)
-                            .resizable()
-                            .scaledToFit()
-                            .padding(8)
-                    }
-                }
-                .frame(height: 60)
-
-                Text(model.name)
-                    .font(.system(.caption2, design: .rounded).weight(.semibold))
-                    .foregroundStyle(Theme.primaryText)
-                    .lineLimit(1)
-            }
-            .padding(8)
-            .frame(width: 110, height: 110)
-            .glassCard(cornerRadius: 18)
-        }
-        .buttonStyle(.plain)
-    }
-}
-
-private struct DocumentRowCard: View {
+// MARK: - Document Row Card (Plain Clean Design with More Menu)
+struct DocumentRowCard: View {
     let doc: SignedDocumentModel
     let onOpen: () -> Void
+    let onDelete: () -> Void
 
     var body: some View {
         Button(action: onOpen) {
-            HStack(spacing: 14) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [Theme.pdfRed.opacity(0.14), Theme.pdfRed.opacity(0.06)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 48, height: 54)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .stroke(Theme.pdfRed.opacity(0.22), lineWidth: 0.8)
-                        }
-
-                    VStack(spacing: 2) {
-                        Image(systemName: "doc.text.fill")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundStyle(Theme.pdfRed)
-                        Text("PDF")
-                            .font(.system(size: 8, weight: .heavy, design: .rounded))
-                            .foregroundStyle(Theme.pdfRed)
-                            .tracking(0.5)
-                    }
-                }
+            HStack(spacing: 12) {
+                PDFDocumentThumbnailView(doc: doc, width: 48, height: 56, cornerRadius: 10)
 
                 VStack(alignment: .leading, spacing: 5) {
                     Text(doc.displayName)
-                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .font(.system(.body, design: .rounded).weight(.semibold))
                         .foregroundStyle(Theme.primaryText)
                         .lineLimit(1)
                         .truncationMode(.middle)
@@ -444,15 +352,52 @@ private struct DocumentRowCard: View {
                     }
                 }
 
-                Spacer()
+                Spacer(minLength: 4)
 
-                Image(systemName: "chevron.right")
-                    .font(.system(.caption, design: .rounded).weight(.semibold))
-                    .foregroundStyle(Theme.secondaryText.opacity(0.6))
+                Menu {
+                    Button(action: onOpen) {
+                        Label(LocalizationManager.shared.localized("open_preview"), systemImage: "eye")
+                    }
+
+                    ShareLink(item: doc.fileURL) {
+                        Label(LocalizationManager.shared.localized("share"), systemImage: "square.and.arrow.up")
+                    }
+
+                    Divider()
+
+                    Button(role: .destructive, action: onDelete) {
+                        Label(LocalizationManager.shared.localized("delete"), systemImage: "trash")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(Theme.secondaryText)
+                        .frame(width: 32, height: 32)
+                        .background(
+                            Circle()
+                                .fill(Theme.lightBackground)
+                        )
+                }
             }
-            .padding(14)
-            .glassCard(cornerRadius: 18)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .glassCard(cornerRadius: 16)
         }
         .buttonStyle(.plain)
+        .contextMenu {
+            Button(action: onOpen) {
+                Label(LocalizationManager.shared.localized("open_preview"), systemImage: "eye")
+            }
+
+            ShareLink(item: doc.fileURL) {
+                Label(LocalizationManager.shared.localized("share"), systemImage: "square.and.arrow.up")
+            }
+
+            Divider()
+
+            Button(role: .destructive, action: onDelete) {
+                Label(LocalizationManager.shared.localized("delete"), systemImage: "trash")
+            }
+        }
     }
 }

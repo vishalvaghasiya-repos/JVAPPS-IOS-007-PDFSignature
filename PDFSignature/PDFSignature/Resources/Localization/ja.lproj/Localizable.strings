@@ -27,6 +27,8 @@
 "see_all" = "すべて見る";
 "add_new_signature" = "署名を追加";
 "recent_signed" = "最近署名したファイル";
+"recent" = "最近";
+"see_more" = "もっと見る";
 "no_signed_docs" = "署名済みドキュメントはありません";
 "sign_first_doc" = "最初のドキュメントに署名してみましょう。";
 "quick_sign_banner_title" = "ドキュメントに署名";
@@ -51,14 +53,14 @@
 "no_signatures_yet" = "署名がまだありません";
 "create_signature_desc" = "上の「+」ボタンから作成できます。";
 "choose_signature" = "署名を選択";
-"choose_signature_picker" = "署名ステッカーを選択";
+"choose_signature_picker" = "署名";
 "rename_signature" = "署名名を変更";
 "rename_signature_desc" = "分かりやすい名前を入力してください。";
 "sign_pdf" = "PDFに署名";
 "page_x_of_y" = "ページ %d / %d";
 "undo_last" = "1つ戻す";
 "apply_to_page" = "ページに適用";
-"signature_size" = "署名の大きさ";
+"signature_size" = "サイズ";
 "document_title" = "署名済みドキュメント名";
 "save_signed_pdf" = "署名済みPDFを保存";
 "saving" = "保存中…";

@@ -122,9 +122,6 @@ struct NewSignatureView: View {
 
                     // Signature Name Card
                     signatureNameCard
-
-                    // Save Button
-                    saveActionButton
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
@@ -132,12 +129,32 @@ struct NewSignatureView: View {
             }
             .scrollIndicators(.hidden)
         }
+        .background {
+            if !nativeIsLoaded {
+                NativeAdContainerView(
+                    adView: nativeAdView,
+                    height: nativeHeight,
+                    isLoaded: $nativeIsLoaded,
+                    resolvedHeight: $nativeHeight
+                )
+                .frame(height: 0)
+                .opacity(0)
+                .allowsHitTesting(false)
+            }
+        }
         .navigationTitle(localization.localized("new_signature"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Theme.background, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .tint(Theme.primary)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(localization.localized("new_signature"))
+                    .font(.system(.headline, design: .rounded).weight(.bold))
+                    .foregroundStyle(Theme.titleText)
+            }
+
             ToolbarItem(placement: .confirmationAction) {
                 Button(localization.localized("save")) {
                     save()
@@ -276,14 +293,16 @@ struct NewSignatureView: View {
                     .stroke(Theme.border, lineWidth: 1.2)
             }
 
-            NativeAdContainerView(
-                adView: nativeAdView,
-                height: nativeHeight,
-                isLoaded: $nativeIsLoaded,
-                resolvedHeight: $nativeHeight
-            )
-            .frame(height: nativeHeight)
-            .cornerRadius(12)
+            if nativeIsLoaded {
+                NativeAdContainerView(
+                    adView: nativeAdView,
+                    height: nativeHeight,
+                    isLoaded: $nativeIsLoaded,
+                    resolvedHeight: $nativeHeight
+                )
+                .frame(height: nativeHeight)
+                .cornerRadius(12)
+            }
             
             // Draw Ink Color Picker
             colorPaletteRow(
@@ -609,15 +628,6 @@ struct NewSignatureView: View {
             .padding(14)
             .glassCard(cornerRadius: 14)
         }
-    }
-
-    // MARK: - Save Action Button
-    private var saveActionButton: some View {
-        PrimaryButton(title: localization.localized("save"), systemImage: "checkmark.circle.fill") {
-            save()
-        }
-        .disabled(!canSave)
-        .opacity(canSave ? 1.0 : 0.5)
     }
 
     // MARK: - Color Palette Row

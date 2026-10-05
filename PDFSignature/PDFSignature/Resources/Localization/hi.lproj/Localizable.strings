@@ -27,6 +27,8 @@
 "see_all" = "सभी देखें";
 "add_new_signature" = "नया हस्ताक्षर जोड़ें";
 "recent_signed" = "हाल ही में हस्ताक्षरित";
+"recent" = "हाल के";
+"see_more" = "और देखें";
 "no_signed_docs" = "अभी तक कोई हस्ताक्षरित दस्तावेज़ नहीं है";
 "sign_first_doc" = "यहां देखने के लिए अपना पहला दस्तावेज़ हस्ताक्षर करें।";
 "quick_sign_banner_title" = "दस्तावेज़ पर हस्ताक्षर करें";
@@ -51,14 +53,14 @@
 "no_signatures_yet" = "अभी कोई हस्ताक्षर नहीं है";
 "create_signature_desc" = "हस्ताक्षर बनाने के लिए ऊपर '+' पर टैप करें।";
 "choose_signature" = "हस्ताक्षर चुनें";
-"choose_signature_picker" = "हस्ताक्षर स्टिकर चुनें";
+"choose_signature_picker" = "हस्ताक्षर";
 "rename_signature" = "हस्ताक्षर का नाम बदलें";
 "rename_signature_desc" = "इस हस्ताक्षर को एक यादगार नाम दें।";
 "sign_pdf" = "PDF पर हस्ताक्षर करें";
 "page_x_of_y" = "पृष्ठ %d / %d";
 "undo_last" = "अंतिम पूर्ववत करें";
 "apply_to_page" = "पृष्ठ पर लागू करें";
-"signature_size" = "हस्ताक्षर का आकार";
+"signature_size" = "आकार";
 "document_title" = "हस्ताक्षरित दस्तावेज़ का शीर्षक";
 "save_signed_pdf" = "हस्ताक्षरित PDF सहेजें";
 "saving" = "सहेजा जा रहा है…";

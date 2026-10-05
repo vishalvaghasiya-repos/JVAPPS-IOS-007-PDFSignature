@@ -19,16 +19,8 @@ struct LaunchView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [
-                    Color(red: 0.04, green: 0.08, blue: 0.09),
-                    Color(red: 0.06, green: 0.11, blue: 0.12),
-                    Color(red: 0.08, green: 0.14, blue: 0.15)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            Theme.background
+                .ignoresSafeArea()
             
             VStack {
                 Spacer()

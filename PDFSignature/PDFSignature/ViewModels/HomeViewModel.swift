@@ -38,6 +38,17 @@ final class HomeViewModel: ObservableObject {
     }
 
     var recentDocuments: [SignedDocumentModel] {
-        Array(filteredDocuments.prefix(8))
+        Array(filteredDocuments.prefix(5))
+    }
+
+    func delete(_ doc: SignedDocumentModel) {
+        guard let modelContext else { return }
+        do {
+            try StorageManager.deleteSignedDocument(context: modelContext, id: doc.id)
+            refresh()
+            HapticFeedback.light()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }

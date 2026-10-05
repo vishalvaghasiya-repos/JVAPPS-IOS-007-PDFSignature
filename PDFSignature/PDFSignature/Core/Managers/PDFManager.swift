@@ -48,7 +48,12 @@ enum PDFManager {
                 width: n.width * bounds.width,
                 height: n.height * bounds.height
             )
-            let annotation = SignaturePDFAnnotation(bounds: pdfRect, image: image, rotationDegrees: placement.rotationDegrees)
+            let annotation = SignaturePDFAnnotation(
+                bounds: pdfRect,
+                image: image,
+                rotationDegrees: placement.rotationDegrees,
+                isFlippedHorizontally: placement.isFlippedHorizontally
+            )
             page.addAnnotation(annotation)
         }
 
@@ -85,10 +90,12 @@ enum PDFManager {
 private final class SignaturePDFAnnotation: PDFAnnotation {
     private let signatureImage: UIImage
     private let rotationDegrees: Double
+    private let isFlippedHorizontally: Bool
 
-    init(bounds: CGRect, image: UIImage, rotationDegrees: Double) {
+    init(bounds: CGRect, image: UIImage, rotationDegrees: Double, isFlippedHorizontally: Bool = false) {
         self.signatureImage = image
         self.rotationDegrees = rotationDegrees
+        self.isFlippedHorizontally = isFlippedHorizontally
         super.init(bounds: bounds, forType: .stamp, withProperties: nil)
     }
 
@@ -100,6 +107,9 @@ private final class SignaturePDFAnnotation: PDFAnnotation {
         context.saveGState()
         context.translateBy(x: bounds.midX, y: bounds.midY)
         context.rotate(by: CGFloat(rotationDegrees * .pi / 180))
+        if isFlippedHorizontally {
+            context.scaleBy(x: -1, y: 1)
+        }
         context.translateBy(x: -bounds.width / 2, y: -bounds.height / 2)
         if let cgImage = signatureImage.cgImage {
             context.draw(cgImage, in: CGRect(origin: .zero, size: bounds.size))

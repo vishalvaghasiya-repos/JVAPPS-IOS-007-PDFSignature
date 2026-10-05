@@ -64,14 +64,23 @@ struct SignatureLibraryView: View {
                 isLoaded: $bannerIsLoaded,
                 height: $bannerHeight
             )
-            .frame(height: bannerIsLoaded ? bannerHeight : 50)
+            .frame(height: bannerIsLoaded ? bannerHeight : 0)
+            .opacity(bannerIsLoaded ? 1 : 0)
+            .clipped()
         }
         .navigationTitle(localization.localized("signatures"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Theme.background, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .tint(Theme.primary)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(localization.localized("signatures"))
+                    .font(.system(.headline, design: .rounded).weight(.bold))
+                    .foregroundStyle(Theme.titleText)
+            }
+
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     router.push(.newSignature, on: appState.selectedTab)
@@ -141,7 +150,7 @@ private struct SignatureLibraryRow: View {
                 )
             }
             .padding(14)
-            .glassCard(cornerRadius: 18)
+            .glassCard(cornerRadius: 18, hasShadow: false)
         }
         .buttonStyle(.plain)
     }

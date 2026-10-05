@@ -14,18 +14,21 @@ struct PDFSignaturePlacement: Identifiable, Hashable {
     var pageIndex: Int
     var normalizedRect: CGRect
     var rotationDegrees: Double
+    var isFlippedHorizontally: Bool
 
     init(
         id: UUID = UUID(),
         signatureID: UUID,
         pageIndex: Int,
         normalizedRect: CGRect,
-        rotationDegrees: Double = 0
+        rotationDegrees: Double = 0,
+        isFlippedHorizontally: Bool = false
     ) {
         self.id = id
         self.signatureID = signatureID
         self.pageIndex = pageIndex
         self.normalizedRect = normalizedRect
         self.rotationDegrees = rotationDegrees
+        self.isFlippedHorizontally = isFlippedHorizontally
     }
 }

@@ -18,6 +18,7 @@ struct HistoryView: View {
     @State private var pendingDeleteDoc: SignedDocumentModel?
     @State private var bannerIsLoaded = false
     @State private var bannerHeight: CGFloat = 50
+    @State private var isSearchVisible = false
 
     var body: some View {
         NavigationStack(path: $router.historyPath) {
@@ -25,23 +26,65 @@ struct HistoryView: View {
                 Theme.primaryGradient
                     .ignoresSafeArea()
 
-                if vm.filtered.isEmpty {
-                    empty
-                } else {
-                    ScrollView(showsIndicators: false) {
-                        LazyVStack(spacing: 12) {
-                            ForEach(vm.filtered) { doc in
-                                HistoryRow(doc: doc) {
-                                    router.push(.pdfPreview(doc), on: .history)
-                                } onDelete: {
-                                    pendingDeleteDoc = doc
+                VStack(spacing: 0) {
+                    // Toggled in-screen search bar (hidden by default)
+                    if isSearchVisible {
+                        HStack(spacing: 10) {
+                            Image(systemName: "magnifyingglass")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundStyle(Theme.secondaryText)
+
+                            TextField(localization.localized("search_signed_pdfs"), text: $vm.searchText)
+                                .textFieldStyle(.plain)
+                                .font(.system(.subheadline, design: .rounded))
+                                .foregroundStyle(Theme.primaryText)
+
+                            if !vm.searchText.isEmpty {
+                                Button {
+                                    vm.searchText = ""
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .font(.system(size: 14))
+                                        .foregroundStyle(Theme.secondaryText)
                                 }
                             }
                         }
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(Theme.card)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .stroke(Theme.border.opacity(0.6), lineWidth: 0.8)
+                        )
                         .padding(.horizontal, 20)
-                        .padding(.vertical, 16)
+                        .padding(.top, 10)
+                        .padding(.bottom, 6)
+                        .transition(.move(edge: .top).combined(with: .opacity))
                     }
-                    .scrollIndicators(.hidden)
+
+                    if vm.filtered.isEmpty {
+                        empty
+                    } else {
+                        ScrollView(showsIndicators: false) {
+                            LazyVStack(spacing: 10) {
+                                ForEach(vm.filtered) { doc in
+                                    DocumentRowCard(
+                                        doc: doc,
+                                        onOpen: {
+                                            router.push(.pdfPreview(doc), on: .history)
+                                        },
+                                        onDelete: {
+                                            pendingDeleteDoc = doc
+                                        }
+                                    )
+                                }
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 16)
+                        }
+                        .scrollIndicators(.hidden)
+                    }
                 }
             }
             .safeAreaInset(edge: .bottom) {
@@ -50,16 +93,36 @@ struct HistoryView: View {
                     isLoaded: $bannerIsLoaded,
                     height: $bannerHeight
                 )
-                .frame(height: bannerIsLoaded ? bannerHeight : 50)
+                .frame(height: bannerIsLoaded ? bannerHeight : 0)
+                .opacity(bannerIsLoaded ? 1 : 0)
+                .clipped()
             }
             .navigationTitle(localization.localized("history"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .searchable(
-                text: $vm.searchText,
-                placement: .navigationBarDrawer(displayMode: .automatic),
-                prompt: localization.localized("search_signed_pdfs")
-            )
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(localization.localized("history"))
+                        .font(.system(.headline, design: .rounded).weight(.bold))
+                        .foregroundStyle(Theme.titleText)
+                }
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            isSearchVisible.toggle()
+                            if !isSearchVisible {
+                                vm.searchText = ""
+                            }
+                        }
+                    } label: {
+                        Image(systemName: isSearchVisible ? "xmark" : "magnifyingglass")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(Theme.primary)
+                            .frame(width: 32, height: 32)
+                    }
+                }
+            }
             .toolbar(router.historyPath.isEmpty ? .visible : .hidden, for: .tabBar)
             .navigationDestination(for: AppRoute.self) { route in
                 Group {
@@ -122,184 +185,5 @@ struct HistoryView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-    }
-}
-
-private struct HistoryRow: View {
-    let doc: SignedDocumentModel
-    let onOpen: () -> Void
-    let onDelete: () -> Void
-
-    var body: some View {
-        Button(action: onOpen) {
-            HStack(alignment: .center, spacing: 14) {
-                PDFDocumentThumbnailView(doc: doc)
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(doc.displayName)
-                        .font(.system(.body, design: .rounded).weight(.semibold))
-                        .foregroundStyle(Theme.primaryText)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-
-                    HStack(spacing: 5) {
-                        Image(systemName: "calendar")
-                            .font(.system(size: 11, weight: .medium))
-                        Text(doc.createdAt.formatted(date: .abbreviated, time: .shortened))
-                            .font(.system(.caption, design: .rounded))
-                    }
-                    .foregroundStyle(Theme.secondaryText)
-
-                    HStack(spacing: 6) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "doc.text.fill")
-                                .font(.system(size: 9))
-                            Text(doc.formattedPageCount)
-                                .font(.system(size: 11, weight: .semibold, design: .rounded))
-                        }
-                        .foregroundStyle(Theme.primary)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3.5)
-                        .background(
-                            Capsule()
-                                .fill(Theme.primary.opacity(0.1))
-                        )
-
-                        if let size = doc.fileSizeString {
-                            HStack(spacing: 4) {
-                                Image(systemName: "internaldrive")
-                                    .font(.system(size: 9))
-                                Text(size)
-                                    .font(.system(size: 11, weight: .medium, design: .rounded))
-                            }
-                            .foregroundStyle(Theme.secondaryText)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3.5)
-                            .background(
-                                Capsule()
-                                    .fill(Theme.lightBackground)
-                            )
-                        }
-                    }
-                }
-
-                Spacer(minLength: 4)
-
-                Menu {
-                    Button(action: onOpen) {
-                        Label(LocalizationManager.shared.localized("open_preview"), systemImage: "eye")
-                    }
-
-                    ShareLink(item: doc.fileURL) {
-                        Label(LocalizationManager.shared.localized("share"), systemImage: "square.and.arrow.up")
-                    }
-
-                    Divider()
-
-                    Button(role: .destructive, action: onDelete) {
-                        Label(LocalizationManager.shared.localized("delete"), systemImage: "trash")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundStyle(Theme.secondaryText)
-                        .frame(width: 32, height: 32)
-                        .background(
-                            Circle()
-                                .fill(Theme.lightBackground)
-                        )
-                }
-            }
-            .padding(14)
-            .glassCard(cornerRadius: 18)
-        }
-        .buttonStyle(.plain)
-        .contextMenu {
-            Button(action: onOpen) {
-                Label(LocalizationManager.shared.localized("open_preview"), systemImage: "eye")
-            }
-
-            ShareLink(item: doc.fileURL) {
-                Label(LocalizationManager.shared.localized("share"), systemImage: "square.and.arrow.up")
-            }
-
-            Divider()
-
-            Button(role: .destructive, action: onDelete) {
-                Label(LocalizationManager.shared.localized("delete"), systemImage: "trash")
-            }
-        }
-    }
-}
-
-private struct PDFDocumentThumbnailView: View {
-    let doc: SignedDocumentModel
-    @State private var thumbnail: UIImage?
-
-    private static let cache = NSCache<NSURL, UIImage>()
-
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [Theme.pdfRed.opacity(0.14), Theme.pdfRed.opacity(0.06)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .overlay {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(Theme.pdfRed.opacity(0.22), lineWidth: 0.8)
-                }
-
-            if let thumbnail {
-                Image(uiImage: thumbnail)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 52, height: 60)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .stroke(Theme.border.opacity(0.5), lineWidth: 0.5)
-                    }
-            } else {
-                VStack(spacing: 3) {
-                    Image(systemName: "doc.text.fill")
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(Theme.pdfRed)
-
-                    Text("PDF")
-                        .font(.system(size: 9, weight: .heavy, design: .rounded))
-                        .foregroundStyle(Theme.pdfRed)
-                        .tracking(0.6)
-                }
-            }
-        }
-        .frame(width: 52, height: 60)
-        .task(id: doc.id) {
-            loadThumbnail()
-        }
-    }
-
-    private func loadThumbnail() {
-        let url = doc.fileURL
-        let nsURL = url as NSURL
-        if let cached = Self.cache.object(forKey: nsURL) {
-            self.thumbnail = cached
-            return
-        }
-
-        Task.detached(priority: .userInitiated) {
-            guard FileManager.default.fileExists(atPath: url.path),
-                  let pdf = PDFDocument(url: url),
-                  let rendered = PDFManager.renderPageThumbnail(document: pdf, pageIndex: 0, maxWidth: 120) else {
-                return
-            }
-            Self.cache.setObject(rendered, forKey: nsURL)
-            await MainActor.run {
-                self.thumbnail = rendered
-            }
-        }
     }
 }

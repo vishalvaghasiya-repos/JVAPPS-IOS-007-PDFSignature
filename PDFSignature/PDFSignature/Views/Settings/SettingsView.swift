@@ -99,14 +99,16 @@ struct SettingsView: View {
                             .padding(.vertical, 10)
                         }
                         
-                        NativeAdContainerView(
-                            adView: nativeAdView,
-                            height: nativeHeight,
-                            isLoaded: $nativeIsLoaded,
-                            resolvedHeight: $nativeHeight
-                        )
-                        .frame(height: nativeHeight)
-                        .cornerRadius(12)
+                        if nativeIsLoaded {
+                            NativeAdContainerView(
+                                adView: nativeAdView,
+                                height: nativeHeight,
+                                isLoaded: $nativeIsLoaded,
+                                resolvedHeight: $nativeHeight
+                            )
+                            .frame(height: nativeHeight)
+                            .cornerRadius(12)
+                        }
 
                         // iCloud Library
                         settingsGroup(title: localization.localized("icloud_library")) {
@@ -277,12 +279,25 @@ struct SettingsView: View {
                                 .foregroundStyle(Theme.secondaryText.opacity(0.7))
                         }
                         .padding(.top, 4)
-                        .padding(.bottom, 24)
+                        .padding(.bottom, 8)
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                 }
                 .scrollIndicators(.hidden)
+            }
+            .background {
+                if !nativeIsLoaded {
+                    NativeAdContainerView(
+                        adView: nativeAdView,
+                        height: nativeHeight,
+                        isLoaded: $nativeIsLoaded,
+                        resolvedHeight: $nativeHeight
+                    )
+                    .frame(height: 0)
+                    .opacity(0)
+                    .allowsHitTesting(false)
+                }
             }
             .safeAreaInset(edge: .bottom) {
                 BannerAdView(
@@ -290,11 +305,20 @@ struct SettingsView: View {
                     isLoaded: $bannerIsLoaded,
                     height: $bannerHeight
                 )
-                .frame(height: bannerIsLoaded ? bannerHeight : 50)
+                .frame(height: bannerIsLoaded ? bannerHeight : 0)
+                .opacity(bannerIsLoaded ? 1 : 0)
+                .clipped()
             }
             .navigationTitle(localization.localized("settings"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(localization.localized("settings"))
+                        .font(.system(.headline, design: .rounded).weight(.bold))
+                        .foregroundStyle(Theme.titleText)
+                }
+            }
             .onAppear {
                 iCloudSyncToggle = DocumentPaths.isICloudLibrarySyncEnabled
             }

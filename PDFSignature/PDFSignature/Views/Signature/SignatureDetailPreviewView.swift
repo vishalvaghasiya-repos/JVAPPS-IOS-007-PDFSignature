@@ -86,7 +86,15 @@ struct SignatureDetailPreviewView: View {
             .navigationTitle(currentName.isEmpty ? signature.name : currentName)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Theme.background, for: .navigationBar)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(currentName.isEmpty ? signature.name : currentName)
+                        .font(.system(.headline, design: .rounded).weight(.bold))
+                        .foregroundStyle(Theme.titleText)
+                        .lineLimit(1)
+                }
+
                 ToolbarItem(placement: .cancellationAction) {
                     Button(localization.localized("close")) {
                         dismiss()

@@ -7,31 +7,46 @@ import SwiftUI
 import UIKit
 
 enum Theme {
-    // MARK: - Asset-backed Theme Colors
+    // MARK: - Core Theme Palette (Asset-backed for automatic Light/Dark support)
     static let primary = Color("Primary")
-    static let button = Color("Button")
-    static let secondary = Color("Secondary")
-    static let lightBackground = Color("LightBackground")
-    static let background = Color("Background")
-    static let card = Color("Card")
-    static let primaryText = Color("PrimaryText")
-    static let secondaryText = Color("SecondaryText")
-    static let border = Color("Border")
-    static let success = Color("Success")
-    static let pdfRed = Color("PDFRed")
+    static let primaryDark = Color("PrimaryDark")
+    static let onPrimary = Color("OnPrimary")
 
-    // MARK: - Global Accent
+    static let background = Color("Background")
+    static let onBackground = Color("OnBackground")
+
+    static let card = Color("Card")
+    static let onCard = Color("OnCard")
+
+    static let secondary = Color("Secondary")
     static let accent = Color("AccentColor")
+
+    static let titleText = Color("TitleText")
+    static let secondaryText = Color("SecondaryText")
+    static let placeholder = Color("Placeholder")
+
+    static let border = Color("Border")
+    static let divider = Color("Divider")
+
+    static let success = Color("Success")
+    static let warning = Color("Warning")
+    static let error = Color("Error")
+
+    // MARK: - Backward Compatible Aliases
+    static let button = Color("Button")
+    static let primaryText = Color("PrimaryText")
+    static let lightBackground = Color("LightBackground")
+    static let pdfRed = Color("PDFRed")
 
     // MARK: - Special & Surface Accents
     static let glassStroke = Color("Border")
     static let glassFill = Color("Card")
-    static let cardShadow = Color.black.opacity(0.06)
+    static let cardShadow = Color.black.opacity(0.08)
 
     // MARK: - Premium Accent Colors
     static let premiumPurple = Color(red: 0.55, green: 0.32, blue: 0.98)
     static let premiumPink = Color(red: 0.98, green: 0.35, blue: 0.55)
-    static let premiumCyan = Color("Secondary")
+    static let premiumCyan = Color("AccentColor")
 
     // MARK: - Typography
     static let titleFont = Font.system(.largeTitle, design: .rounded).weight(.bold)
@@ -42,7 +57,10 @@ enum Theme {
     // MARK: - Gradients
     static var primaryGradient: LinearGradient {
         LinearGradient(
-            colors: [lightBackground.opacity(0.65), background],
+            colors: [
+                background,
+                background
+            ],
             startPoint: .top,
             endPoint: .bottom
         )
@@ -50,7 +68,7 @@ enum Theme {
 
     static var brandGradient: LinearGradient {
         LinearGradient(
-            colors: [primary, secondary],
+            colors: [primary, primaryDark],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -58,7 +76,7 @@ enum Theme {
 
     static var buttonGradient: LinearGradient {
         LinearGradient(
-            colors: [button, primary],
+            colors: [primary, primaryDark],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -68,8 +86,7 @@ enum Theme {
         LinearGradient(
             colors: [
                 background,
-                lightBackground,
-                Color(red: 0.06, green: 0.11, blue: 0.12)
+                secondary
             ],
             startPoint: .top,
             endPoint: .bottom
@@ -78,39 +95,89 @@ enum Theme {
 
     static var premiumAccentGradient: LinearGradient {
         LinearGradient(
-            colors: [primary, button, secondary],
+            colors: [primary, accent, primaryDark],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
     }
 }
 
+// MARK: - Hex Initializer Extensions
+extension Color {
+    init(hex: UInt, alpha: Double = 1.0) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xff) / 255.0,
+            green: Double((hex >> 8) & 0xff) / 255.0,
+            blue: Double(hex & 0xff) / 255.0,
+            opacity: alpha
+        )
+    }
+}
+
+extension UIColor {
+    convenience init(hex: UInt, alpha: CGFloat = 1.0) {
+        self.init(
+            red: CGFloat((hex >> 16) & 0xff) / 255.0,
+            green: CGFloat((hex >> 8) & 0xff) / 255.0,
+            blue: CGFloat(hex & 0xff) / 255.0,
+            alpha: alpha
+        )
+    }
+
+    static func dynamic(light: UInt, dark: UInt) -> UIColor {
+        UIColor { trait in
+            trait.userInterfaceStyle == .dark ? UIColor(hex: dark) : UIColor(hex: light)
+        }
+    }
+}
+
 // MARK: - SwiftUI Color Extensions
 extension Color {
     static let appPrimary = Theme.primary
-    static let appButton = Theme.button
-    static let appSecondary = Theme.secondary
-    static let appLightBackground = Theme.lightBackground
+    static let appPrimaryDark = Theme.primaryDark
+    static let appOnPrimary = Theme.onPrimary
     static let appBackground = Theme.background
+    static let appOnBackground = Theme.onBackground
     static let appCard = Theme.card
-    static let appPrimaryText = Theme.primaryText
+    static let appOnCard = Theme.onCard
+    static let appSecondary = Theme.secondary
+    static let appAccent = Theme.accent
+    static let appTitleText = Theme.titleText
     static let appSecondaryText = Theme.secondaryText
+    static let appPlaceholder = Theme.placeholder
     static let appBorder = Theme.border
+    static let appDivider = Theme.divider
     static let appSuccess = Theme.success
+    static let appWarning = Theme.warning
+    static let appError = Theme.error
+    static let appButton = Theme.button
+    static let appPrimaryText = Theme.primaryText
+    static let appLightBackground = Theme.lightBackground
     static let appPDFRed = Theme.pdfRed
 }
 
 // MARK: - UIKit UIColor Extensions
 extension UIColor {
-    static let appPrimary = UIColor(named: "Primary") ?? UIColor(red: 0.031, green: 0.498, blue: 0.549, alpha: 1.0)
-    static let appButton = UIColor(named: "Button") ?? UIColor(red: 0.039, green: 0.624, blue: 0.651, alpha: 1.0)
-    static let appSecondary = UIColor(named: "Secondary") ?? UIColor(red: 0.078, green: 0.722, blue: 0.651, alpha: 1.0)
-    static let appLightBackground = UIColor(named: "LightBackground") ?? UIColor(red: 0.910, green: 0.969, blue: 0.969, alpha: 1.0)
-    static let appBackground = UIColor(named: "Background") ?? UIColor(red: 0.973, green: 0.980, blue: 0.980, alpha: 1.0)
-    static let appCard = UIColor(named: "Card") ?? UIColor.white
-    static let appPrimaryText = UIColor(named: "PrimaryText") ?? UIColor(red: 0.090, green: 0.145, blue: 0.165, alpha: 1.0)
-    static let appSecondaryText = UIColor(named: "SecondaryText") ?? UIColor(red: 0.376, green: 0.455, blue: 0.478, alpha: 1.0)
-    static let appBorder = UIColor(named: "Border") ?? UIColor(red: 0.851, green: 0.906, blue: 0.910, alpha: 1.0)
-    static let appSuccess = UIColor(named: "Success") ?? UIColor(red: 0.133, green: 0.627, blue: 0.420, alpha: 1.0)
-    static let appPDFRed = UIColor(named: "PDFRed") ?? UIColor(red: 0.937, green: 0.267, blue: 0.267, alpha: 1.0)
+    static let appPrimary = UIColor(named: "Primary") ?? UIColor.dynamic(light: 0xED772C, dark: 0xFF8A4C)
+    static let appPrimaryDark = UIColor(named: "PrimaryDark") ?? UIColor.dynamic(light: 0xFF5E00, dark: 0xFF6B1A)
+    static let appOnPrimary = UIColor(named: "OnPrimary") ?? UIColor(hex: 0xFFFFFF)
+    static let appBackground = UIColor(named: "Background") ?? UIColor.dynamic(light: 0xFFFFFF, dark: 0x121212)
+    static let appOnBackground = UIColor(named: "OnBackground") ?? UIColor.dynamic(light: 0x171717, dark: 0xF5F5F5)
+    static let appCard = UIColor(named: "Card") ?? UIColor.dynamic(light: 0xFFFFFF, dark: 0x1C1C1E)
+    static let appOnCard = UIColor(named: "OnCard") ?? UIColor.dynamic(light: 0x171717, dark: 0xF5F5F5)
+    static let appSecondary = UIColor(named: "Secondary") ?? UIColor.dynamic(light: 0xFFF0E7, dark: 0x3A2418)
+    static let appAccent = UIColor(named: "AccentColor") ?? UIColor.dynamic(light: 0xFF8A3D, dark: 0xFF9A5C)
+    static let appTitleText = UIColor(named: "TitleText") ?? UIColor.dynamic(light: 0x171717, dark: 0xF5F5F5)
+    static let appPrimaryText = UIColor(named: "PrimaryText") ?? UIColor.dynamic(light: 0x171717, dark: 0xF5F5F5)
+    static let appSecondaryText = UIColor(named: "SecondaryText") ?? UIColor.dynamic(light: 0x666666, dark: 0xB3B3B3)
+    static let appPlaceholder = UIColor(named: "Placeholder") ?? UIColor.dynamic(light: 0x999999, dark: 0x8E8E93)
+    static let appBorder = UIColor(named: "Border") ?? UIColor.dynamic(light: 0xE5E5E5, dark: 0x38383A)
+    static let appDivider = UIColor(named: "Divider") ?? UIColor.dynamic(light: 0xEEEEEE, dark: 0x2C2C2E)
+    static let appSuccess = UIColor(named: "Success") ?? UIColor.dynamic(light: 0x22A06B, dark: 0x4ADE80)
+    static let appWarning = UIColor(named: "Warning") ?? UIColor.dynamic(light: 0xF59E0B, dark: 0xFBBF24)
+    static let appError = UIColor(named: "Error") ?? UIColor.dynamic(light: 0xD64545, dark: 0xFF6B6B)
+    static let appButton = UIColor(named: "Button") ?? UIColor.dynamic(light: 0xFF5E00, dark: 0xFF6B1A)
+    static let appLightBackground = UIColor(named: "LightBackground") ?? UIColor.dynamic(light: 0xFFF0E7, dark: 0x242426)
+    static let appPDFRed = UIColor(named: "PDFRed") ?? UIColor.dynamic(light: 0xD64545, dark: 0xFF6B6B)
 }

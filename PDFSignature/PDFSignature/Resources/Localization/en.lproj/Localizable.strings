@@ -27,6 +27,8 @@
 "see_all" = "See all";
 "add_new_signature" = "Add New Signature";
 "recent_signed" = "Recent signed";
+"recent" = "Recent";
+"see_more" = "See more";
 "no_signed_docs" = "No signed documents yet";
 "sign_first_doc" = "Sign your first document to see it here.";
 "quick_sign_banner_title" = "Sign Document";
@@ -51,14 +53,14 @@
 "no_signatures_yet" = "No signatures yet";
 "create_signature_desc" = "Tap the '+' button above to create one.";
 "choose_signature" = "Choose signature";
-"choose_signature_picker" = "Choose Signature Sticker";
+"choose_signature_picker" = "Signature";
 "rename_signature" = "Rename signature";
 "rename_signature_desc" = "Give this signature a memorable name.";
 "sign_pdf" = "Sign PDF";
 "page_x_of_y" = "Page %d / %d";
 "undo_last" = "Undo last";
 "apply_to_page" = "Apply to page";
-"signature_size" = "Signature size";
+"signature_size" = "Size";
 "document_title" = "Signed Document Title";
 "save_signed_pdf" = "Save signed PDF";
 "saving" = "Saving…";

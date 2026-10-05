@@ -27,6 +27,8 @@
 "see_all" = "Alle ansehen";
 "add_new_signature" = "Neue Signatur hinzufügen";
 "recent_signed" = "Kürzlich signiert";
+"recent" = "Zuletzt";
+"see_more" = "Mehr sehen";
 "no_signed_docs" = "Noch keine signierten Dokumente";
 "sign_first_doc" = "Signieren Sie Ihr erstes Dokument.";
 "quick_sign_banner_title" = "Dokument signieren";
@@ -51,14 +53,14 @@
 "no_signatures_yet" = "Noch keine Signaturen";
 "create_signature_desc" = "Tippen Sie oben auf '+', um eine zu erstellen.";
 "choose_signature" = "Signatur wählen";
-"choose_signature_picker" = "Signatur-Sticker wählen";
+"choose_signature_picker" = "Signatur";
 "rename_signature" = "Signatur umbenennen";
 "rename_signature_desc" = "Geben Sie einen Namen ein.";
 "sign_pdf" = "PDF signieren";
 "page_x_of_y" = "Seite %d / %d";
 "undo_last" = "Letztes rückgängig";
 "apply_to_page" = "Auf Seite anwenden";
-"signature_size" = "Signaturgröße";
+"signature_size" = "Größe";
 "document_title" = "Titel des Dokuments";
 "save_signed_pdf" = "Signiertes PDF speichern";
 "saving" = "Wird gespeichert…";

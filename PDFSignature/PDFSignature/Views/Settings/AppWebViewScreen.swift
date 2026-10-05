@@ -118,14 +118,27 @@ struct AppWebViewScreen: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Theme.background, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
+        .tint(Theme.primary)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(title)
+                    .font(.system(.headline, design: .rounded).weight(.bold))
+                    .foregroundStyle(Theme.titleText)
+                    .lineLimit(1)
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             BannerAdView(
                 adType: .collapsed(position: .bottom),
                 isLoaded: $bannerIsLoaded,
                 height: $bannerHeight
             )
-            .frame(height: bannerIsLoaded ? bannerHeight : 50)
+            .frame(height: bannerIsLoaded ? bannerHeight : 0)
+            .opacity(bannerIsLoaded ? 1 : 0)
+            .clipped()
         }
     }
 }

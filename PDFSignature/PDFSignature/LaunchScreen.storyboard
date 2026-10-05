@@ -28,7 +28,7 @@
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
-                        <color key="backgroundColor" name="LightBackground"/>
+                        <color key="backgroundColor" name="Background"/>
                         <constraints>
                             <constraint firstItem="WW7-Lz-bqX" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="32Y-yV-kGk"/>
                             <constraint firstItem="WW7-Lz-bqX" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="3J5-jf-Xqd"/>
@@ -52,8 +52,8 @@
     <resources>
         <image name="Splash" width="390" height="847"/>
         <image name="splash_logo" width="1024" height="1024"/>
-        <namedColor name="LightBackground">
-            <color red="0.90980392156862744" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="Background">
+            <color red="0.07058823529411765" green="0.07058823529411765" blue="0.07058823529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

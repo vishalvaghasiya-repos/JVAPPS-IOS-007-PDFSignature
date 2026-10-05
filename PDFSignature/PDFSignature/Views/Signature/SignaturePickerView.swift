@@ -64,7 +64,7 @@ struct SignaturePickerView: View {
                                                 .foregroundStyle(Theme.primary.opacity(0.8))
                                         }
                                         .padding(14)
-                                        .glassCard(cornerRadius: 18)
+                                        .glassCard(cornerRadius: 18, hasShadow: false)
                                     }
                                     .buttonStyle(.plain)
                                 }
@@ -79,8 +79,15 @@ struct SignaturePickerView: View {
             .navigationTitle(localization.localized("choose_signature"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Theme.background, for: .navigationBar)
             .tint(Theme.primary)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(localization.localized("choose_signature"))
+                        .font(.system(.headline, design: .rounded).weight(.bold))
+                        .foregroundStyle(Theme.titleText)
+                }
+
                 ToolbarItem(placement: .cancellationAction) {
                     Button(localization.localized("close")) { dismiss() }
                         .foregroundStyle(Theme.primary)

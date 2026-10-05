@@ -27,6 +27,8 @@
 "see_all" = "عرض الكل";
 "add_new_signature" = "إضافة توقيع جديد";
 "recent_signed" = "الموقعة مؤخراً";
+"recent" = "الأخيرة";
+"see_more" = "المزيد";
 "no_signed_docs" = "لا توجد مستندات موقعة بعد";
 "sign_first_doc" = "وقّع مستندك الأول لتجده هنا.";
 "quick_sign_banner_title" = "توقيع مستند";
@@ -51,14 +53,14 @@
 "no_signatures_yet" = "لا توجد تواقيع بعد";
 "create_signature_desc" = "اضغط على '+' أعلاه لإنشاء توقيع.";
 "choose_signature" = "اختيار توقيع";
-"choose_signature_picker" = "اختيار ملصق التوقيع";
+"choose_signature_picker" = "توقيع";
 "rename_signature" = "إعادة تسمية التوقيع";
 "rename_signature_desc" = "اختر اسماً مميزاً لهذا التوقيع.";
 "sign_pdf" = "توقيع PDF";
 "page_x_of_y" = "صفحة %d / %d";
 "undo_last" = "تراجع عن الأخير";
 "apply_to_page" = "تطبيق على الصفحة";
-"signature_size" = "حجم التوقيع";
+"signature_size" = "الحجم";
 "document_title" = "عنوان المستند الموقع";
 "save_signed_pdf" = "حفظ ملف PDF الموقع";
 "saving" = "جارٍ الحفظ…";

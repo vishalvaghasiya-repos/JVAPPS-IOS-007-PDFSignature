@@ -29,6 +29,37 @@ struct PDFSignatureApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @State private var hasLaunched = true
 
+    init() {
+        configureAppearance()
+    }
+
+    private func configureAppearance() {
+        let barAppearance = UINavigationBarAppearance()
+        barAppearance.configureWithOpaqueBackground()
+        barAppearance.backgroundColor = UIColor.appBackground
+        barAppearance.titleTextAttributes = [
+            .foregroundColor: UIColor.appTitleText
+        ]
+        barAppearance.largeTitleTextAttributes = [
+            .foregroundColor: UIColor.appTitleText
+        ]
+
+        let transparentAppearance = UINavigationBarAppearance()
+        transparentAppearance.configureWithTransparentBackground()
+        transparentAppearance.backgroundColor = .clear
+        transparentAppearance.titleTextAttributes = [
+            .foregroundColor: UIColor.appTitleText
+        ]
+        transparentAppearance.largeTitleTextAttributes = [
+            .foregroundColor: UIColor.appTitleText
+        ]
+
+        UINavigationBar.appearance().standardAppearance = barAppearance
+        UINavigationBar.appearance().compactAppearance = barAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = transparentAppearance
+        UINavigationBar.appearance().tintColor = UIColor.appPrimary
+    }
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             SignatureRecord.self,
