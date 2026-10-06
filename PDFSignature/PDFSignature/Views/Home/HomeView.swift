@@ -206,9 +206,9 @@ struct HomeView: View {
             }
             .padding(20)
             .background {
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(Theme.buttonGradient)
-                    .shadow(color: Theme.button.opacity(0.28), radius: 10, x: 0, y: 5)
+                    //.shadow(color: Theme.button.opacity(0.28), radius: 10, x: 0, y: 5)
             }
         }
         .buttonStyle(.plain)
@@ -248,7 +248,7 @@ struct HomeView: View {
             if vm.recentDocuments.isEmpty {
                 emptyRecent
             } else {
-                VStack(spacing: 10) {
+                VStack(spacing: 12) {
                     ForEach(vm.recentDocuments) { doc in
                         DocumentRowCard(
                             doc: doc,
@@ -288,8 +288,8 @@ struct HomeView: View {
 
             Spacer()
         }
-        .padding(16)
-        .glassCard(cornerRadius: 16)
+        .padding(12)
+        .glassCard(cornerRadius: 12)
     }
 }
 
@@ -302,7 +302,7 @@ struct DocumentRowCard: View {
     var body: some View {
         Button(action: onOpen) {
             HStack(spacing: 12) {
-                PDFDocumentThumbnailView(doc: doc, width: 48, height: 56, cornerRadius: 10)
+                PDFDocumentThumbnailView(doc: doc, width: 48, height: 56, cornerRadius: 8)
 
                 VStack(alignment: .leading, spacing: 5) {
                     Text(doc.displayName)
@@ -379,9 +379,8 @@ struct DocumentRowCard: View {
                         )
                 }
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .glassCard(cornerRadius: 16)
+            .padding(12)
+            .glassCard(cornerRadius: 12, hasShadow: false)
         }
         .buttonStyle(.plain)
         .contextMenu {

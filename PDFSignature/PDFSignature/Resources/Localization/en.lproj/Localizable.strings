@@ -31,8 +31,8 @@
 "see_more" = "See more";
 "no_signed_docs" = "No signed documents yet";
 "sign_first_doc" = "Sign your first document to see it here.";
-"quick_sign_banner_title" = "Sign Document";
-"quick_sign_banner_subtitle" = "Import PDF from files or camera to sign";
+"quick_sign_banner_title" = "Quick Sign";
+"quick_sign_banner_subtitle" = "Select a PDF from Files to sign";
 "import_pdf" = "Import PDF";
 "draw" = "Draw";
 "type" = "Type";

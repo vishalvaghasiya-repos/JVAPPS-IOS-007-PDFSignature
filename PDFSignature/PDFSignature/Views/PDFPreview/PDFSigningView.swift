@@ -445,7 +445,7 @@ struct PDFSigningView: View {
             }
         }
         .padding(10)
-        .glassCard(cornerRadius: 18)
+        .glassCard(cornerRadius: 12, hasShadow: false)
     }
 
     // MARK: - Expandable Size & Transform Bar
@@ -556,7 +556,7 @@ struct PDFSigningView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
-        .glassCard(cornerRadius: 16)
+        .glassCard(cornerRadius: 12, hasShadow: false)
     }
 
 

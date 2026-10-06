@@ -271,15 +271,6 @@ struct SettingsView: View {
                             }
                             .padding(.vertical, 8)
                         }
-
-                        // Footer
-                        VStack(spacing: 4) {
-                            Text("Sign documents with ease & precision")
-                                .font(.system(.caption, design: .rounded))
-                                .foregroundStyle(Theme.secondaryText.opacity(0.7))
-                        }
-                        .padding(.top, 4)
-                        .padding(.bottom, 8)
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)

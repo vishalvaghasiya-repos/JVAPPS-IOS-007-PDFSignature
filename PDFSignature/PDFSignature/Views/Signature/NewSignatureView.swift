@@ -220,7 +220,7 @@ struct NewSignatureView: View {
                             .padding(.vertical, 10)
                             .background {
                                 if isSelected {
-                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                                         .fill(Theme.card)
                                         .shadow(
                                             color: colorScheme == .dark ? Color.black.opacity(0.3) : Theme.cardShadow,
@@ -229,12 +229,12 @@ struct NewSignatureView: View {
                                             y: 2
                                         )
                                 } else {
-                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                                         .fill(Theme.lightBackground)
                                 }
                             }
                             .overlay {
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
                                     .stroke(
                                         isSelected ? Theme.primary : Theme.border,
                                         lineWidth: isSelected ? 1.4 : 0.8
@@ -258,14 +258,14 @@ struct NewSignatureView: View {
     private var drawSection: some View {
         VStack(spacing: 14) {
             ZStack(alignment: .topTrailing) {
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(Theme.card)
 
                 SignatureCanvasView(
                     drawing: $drawing,
                     inkColor: drawUIColor
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
                 // Canvas Actions
                 HStack(spacing: 8) {
@@ -289,7 +289,7 @@ struct NewSignatureView: View {
             .frame(maxWidth: .infinity)
             .frame(height: min(UIScreen.main.bounds.height * 0.44, 380))
             .overlay {
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .stroke(Theme.border, lineWidth: 1.2)
             }
 
@@ -318,10 +318,10 @@ struct NewSignatureView: View {
         VStack(spacing: 16) {
             // Live Preview Card
             ZStack {
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(Theme.card)
                     .overlay {
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
                             .stroke(Theme.border, lineWidth: 1.2)
                     }
 
@@ -367,7 +367,7 @@ struct NewSignatureView: View {
                 }
             }
             .padding(14)
-            .glassCard(cornerRadius: 16)
+            .glassCard(cornerRadius: 12, hasShadow: false)
 
             // Font Style Picker
             VStack(alignment: .leading, spacing: 10) {
@@ -395,10 +395,10 @@ struct NewSignatureView: View {
                                 }
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 10)
-                                .glassCard(cornerRadius: 14)
+                                .glassCard(cornerRadius: 12, hasShadow: false)
                                 .overlay {
                                     if isSelected {
-                                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
                                             .stroke(Theme.primary, lineWidth: 1.8)
                                     }
                                 }
@@ -428,9 +428,9 @@ struct NewSignatureView: View {
                 ZStack {
                     if removeBackground {
                         CheckerboardView()
-                            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     } else {
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
                             .fill(Theme.card)
                     }
 
@@ -449,7 +449,7 @@ struct NewSignatureView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 240)
                 .overlay {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .stroke(Theme.border, lineWidth: 1.2)
                 }
 
@@ -542,7 +542,7 @@ struct NewSignatureView: View {
                     .padding(.top, 4)
                 }
                 .padding(16)
-                .glassCard(cornerRadius: 18)
+                .glassCard(cornerRadius: 12, hasShadow: false)
 
             } else {
                 // Empty Photo Selector Card
@@ -573,7 +573,7 @@ struct NewSignatureView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .background(Theme.button)
-                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                         }
 
                         Button {
@@ -588,9 +588,9 @@ struct NewSignatureView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .background(Theme.lightBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                             .overlay {
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
                                     .stroke(Theme.border, lineWidth: 1)
                             }
                         }
@@ -598,7 +598,7 @@ struct NewSignatureView: View {
                     }
                 }
                 .padding(28)
-                .glassCard(cornerRadius: 22)
+                .glassCard(cornerRadius: 12, hasShadow: false)
             }
         }
     }
@@ -626,7 +626,7 @@ struct NewSignatureView: View {
                 }
             }
             .padding(14)
-            .glassCard(cornerRadius: 14)
+            .glassCard(cornerRadius: 12, hasShadow: false)
         }
     }
 
@@ -669,7 +669,7 @@ struct NewSignatureView: View {
             }
         }
         .padding(14)
-        .glassCard(cornerRadius: 16)
+        .glassCard(cornerRadius: 12, hasShadow: false)
     }
 
     // MARK: - Validation & Save

@@ -49,7 +49,7 @@ struct WelcomeView: View {
                     .opacity(animate ? 1 : 0)
                 }
                 .padding(24)
-                .glassCard(cornerRadius: 28)
+                .glassCard(cornerRadius: 28, hasShadow: false)
                 .padding(.horizontal, 20)
 
                 Spacer()

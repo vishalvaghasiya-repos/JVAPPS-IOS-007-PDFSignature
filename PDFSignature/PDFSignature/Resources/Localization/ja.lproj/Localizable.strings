@@ -31,8 +31,8 @@
 "see_more" = "もっと見る";
 "no_signed_docs" = "署名済みドキュメントはありません";
 "sign_first_doc" = "最初のドキュメントに署名してみましょう。";
-"quick_sign_banner_title" = "ドキュメントに署名";
-"quick_sign_banner_subtitle" = "ファイルまたはカメラからPDFをインポート";
+"quick_sign_banner_title" = "クイック署名";
+"quick_sign_banner_subtitle" = "ファイルからPDFを選択して署名";
 "import_pdf" = "PDFを読み込む";
 "draw" = "手書き";
 "type" = "テキスト";

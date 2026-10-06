@@ -31,8 +31,8 @@
 "see_more" = "Vedi altro";
 "no_signed_docs" = "Nessun documento firmato";
 "sign_first_doc" = "Firma il tuo primo documento.";
-"quick_sign_banner_title" = "Firma documento";
-"quick_sign_banner_subtitle" = "Importa PDF da file o fotocamera";
+"quick_sign_banner_title" = "Firma rapida";
+"quick_sign_banner_subtitle" = "Seleziona un PDF da File da firmare";
 "import_pdf" = "Importa PDF";
 "draw" = "Disegna";
 "type" = "Digita";

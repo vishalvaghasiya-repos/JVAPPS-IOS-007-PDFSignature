@@ -31,8 +31,8 @@
 "see_more" = "Ver mais";
 "no_signed_docs" = "Nenhum documento assinado";
 "sign_first_doc" = "Assine seu primeiro documento para vê-lo aqui.";
-"quick_sign_banner_title" = "Assinar documento";
-"quick_sign_banner_subtitle" = "Importar PDF de arquivos ou câmera";
+"quick_sign_banner_title" = "Assinatura rápida";
+"quick_sign_banner_subtitle" = "Selecione um PDF de Arquivos para assinar";
 "import_pdf" = "Importar PDF";
 "draw" = "Desenhar";
 "type" = "Digitar";

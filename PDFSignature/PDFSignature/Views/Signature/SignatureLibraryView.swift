@@ -26,7 +26,7 @@ struct SignatureLibraryView: View {
         ZStack {
             Theme.primaryGradient.ignoresSafeArea()
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 14) {
+                VStack(spacing: 12) {
                     if vm.signatures.isEmpty {
                         ContentUnavailableView(
                             localization.localized("no_signatures_yet"),
@@ -54,7 +54,7 @@ struct SignatureLibraryView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 16)
+                .padding(.vertical, 12)
             }
             .scrollIndicators(.hidden)
         }
@@ -129,7 +129,7 @@ private struct SignatureLibraryRow: View {
 
     var body: some View {
         Button(action: onPreview) {
-            HStack(spacing: 14) {
+            HStack(spacing: 8) {
                 SignatureThumbnailBox(model: sig)
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -149,8 +149,8 @@ private struct SignatureLibraryRow: View {
                     onDelete: onDelete
                 )
             }
-            .padding(14)
-            .glassCard(cornerRadius: 18, hasShadow: false)
+            .padding(12)
+            .glassCard(cornerRadius: 12, hasShadow: false)
         }
         .buttonStyle(.plain)
     }
@@ -161,10 +161,10 @@ private struct SignatureThumbnailBox: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(Theme.lightBackground)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
                         .stroke(Theme.border, lineWidth: 0.8)
                 )
 

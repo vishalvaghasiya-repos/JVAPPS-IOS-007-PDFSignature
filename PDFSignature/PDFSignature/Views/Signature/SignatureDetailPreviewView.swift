@@ -176,7 +176,7 @@ struct SignatureDetailPreviewView: View {
                     Color(white: 0.12)
                 }
             }
-            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
             if let ui = signature.loadImage() {
                 Image(uiImage: ui)
@@ -210,7 +210,7 @@ struct SignatureDetailPreviewView: View {
         }
         .frame(height: 240)
         .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .stroke(Theme.border, lineWidth: 1)
         )
         .shadow(color: Theme.cardShadow, radius: 10, x: 0, y: 4)
@@ -247,7 +247,7 @@ struct SignatureDetailPreviewView: View {
             }
         }
         .padding(6)
-        .glassCard(cornerRadius: 16)
+        .glassCard(cornerRadius: 12, hasShadow: false)
     }
 
     // MARK: - Info Card
@@ -264,7 +264,7 @@ struct SignatureDetailPreviewView: View {
             infoRow(title: "Created", value: signature.createdAt.formatted(date: .abbreviated, time: .shortened))
         }
         .padding(16)
-        .glassCard(cornerRadius: 18)
+        .glassCard(cornerRadius: 12, hasShadow: false)
     }
 
     private func infoRow(title: String, value: String) -> some View {
@@ -297,7 +297,7 @@ struct SignatureDetailPreviewView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 52)
                 .background(Theme.buttonGradient)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .shadow(color: Theme.button.opacity(0.35), radius: 8, x: 0, y: 4)
             }
             .buttonStyle(.plain)
@@ -322,10 +322,10 @@ struct SignatureDetailPreviewView: View {
                 .frame(height: 50)
                 .background(Theme.card)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .stroke(Theme.button.opacity(0.35), lineWidth: 1.2)
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
             .buttonStyle(.plain)
             .disabled(isSaving)

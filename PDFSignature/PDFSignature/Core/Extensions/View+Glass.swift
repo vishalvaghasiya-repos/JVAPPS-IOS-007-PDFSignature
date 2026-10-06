@@ -6,8 +6,8 @@
 import SwiftUI
 
 struct GlassBackground: ViewModifier {
-    var cornerRadius: CGFloat = 20
-    var hasShadow: Bool = true
+    var cornerRadius: CGFloat = 12
+    var hasShadow: Bool = false
     @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
@@ -38,7 +38,7 @@ struct GlassBackground: ViewModifier {
 }
 
 extension View {
-    func glassCard(cornerRadius: CGFloat = 20, hasShadow: Bool = true) -> some View {
+    func glassCard(cornerRadius: CGFloat = 12, hasShadow: Bool = false) -> some View {
         modifier(GlassBackground(cornerRadius: cornerRadius, hasShadow: hasShadow))
     }
 }

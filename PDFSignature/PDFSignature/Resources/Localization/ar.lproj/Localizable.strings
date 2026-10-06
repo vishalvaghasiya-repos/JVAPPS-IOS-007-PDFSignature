@@ -31,8 +31,8 @@
 "see_more" = "المزيد";
 "no_signed_docs" = "لا توجد مستندات موقعة بعد";
 "sign_first_doc" = "وقّع مستندك الأول لتجده هنا.";
-"quick_sign_banner_title" = "توقيع مستند";
-"quick_sign_banner_subtitle" = "استيراد PDF من الملفات أو الكاميرا";
+"quick_sign_banner_title" = "توقيع سريع";
+"quick_sign_banner_subtitle" = "اختر ملف PDF من الملفات لتوقيعه";
 "import_pdf" = "استيراد PDF";
 "draw" = "رسم";
 "type" = "كتابة";

@@ -64,7 +64,7 @@ struct SignaturePickerView: View {
                                                 .foregroundStyle(Theme.primary.opacity(0.8))
                                         }
                                         .padding(14)
-                                        .glassCard(cornerRadius: 18, hasShadow: false)
+                                        .glassCard(cornerRadius: 12, hasShadow: false)
                                     }
                                     .buttonStyle(.plain)
                                 }

@@ -31,8 +31,8 @@
 "see_more" = "और देखें";
 "no_signed_docs" = "अभी तक कोई हस्ताक्षरित दस्तावेज़ नहीं है";
 "sign_first_doc" = "यहां देखने के लिए अपना पहला दस्तावेज़ हस्ताक्षर करें।";
-"quick_sign_banner_title" = "दस्तावेज़ पर हस्ताक्षर करें";
-"quick_sign_banner_subtitle" = "फ़ाइलों या कैमरे से PDF आयात करें";
+"quick_sign_banner_title" = "त्वरित हस्ताक्षर";
+"quick_sign_banner_subtitle" = "हस्ताक्षर करने के लिए फ़ाइलों से PDF चुनें";
 "import_pdf" = "PDF आयात करें";
 "draw" = "बनाएं";
 "type" = "टाइप करें";

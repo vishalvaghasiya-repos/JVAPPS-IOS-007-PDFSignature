@@ -31,8 +31,8 @@
 "see_more" = "查看更多";
 "no_signed_docs" = "暂无已签名文档";
 "sign_first_doc" = "签署您的第一份文档即可在此查看。";
-"quick_sign_banner_title" = "签署文档";
-"quick_sign_banner_subtitle" = "从文件或相机导入PDF签署";
+"quick_sign_banner_title" = "快捷签署";
+"quick_sign_banner_subtitle" = "从文件选择PDF即可签署";
 "import_pdf" = "导入PDF";
 "draw" = "手绘";
 "type" = "键盘输入";

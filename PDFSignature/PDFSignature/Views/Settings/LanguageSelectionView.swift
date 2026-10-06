@@ -47,7 +47,7 @@ struct LanguageSelectionView: View {
                     }
                 }
                 .padding(14)
-                .glassCard(cornerRadius: 16)
+                .glassCard(cornerRadius: 12, hasShadow: false)
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
 
@@ -105,10 +105,10 @@ struct LanguageSelectionView: View {
                                 }
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 12)
-                                .glassCard(cornerRadius: 18)
+                                .glassCard(cornerRadius: 12, hasShadow: false)
                                 .overlay {
                                     if isSelected {
-                                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
                                             .stroke(Theme.primary.opacity(0.4), lineWidth: 1.5)
                                     }
                                 }

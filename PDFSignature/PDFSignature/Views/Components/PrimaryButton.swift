@@ -32,7 +32,7 @@ struct PrimaryButton: View {
             .padding(.vertical, 16)
             .background {
                 if style == .filled {
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(Theme.button)
                         .shadow(
                             color: Theme.button.opacity(colorScheme == .light ? 0.32 : 0.45),
@@ -41,7 +41,7 @@ struct PrimaryButton: View {
                             y: colorScheme == .light ? 4 : 2
                         )
                         .overlay {
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
                                 .stroke(
                                     colorScheme == .light
                                         ? Color.white.opacity(0.25)
@@ -50,10 +50,10 @@ struct PrimaryButton: View {
                                 )
                         }
                 } else {
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .stroke(Theme.button, lineWidth: 1.5)
                         .background(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
                                 .fill(Theme.lightBackground.opacity(0.45))
                         )
                 }
